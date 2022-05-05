@@ -1,0 +1,101 @@
+/** 网站 */
+entity Website(eco_website) {
+	name                    String required unique    /** 网站名称 */
+    domain                  String required unique    /** 网站域名 */
+    carbonLibraAccount      String required           /** 碳天枰账号ID */
+    organizationName        String required           /** 机构名称 */
+    cityId                  String required           /** 城市ID */
+    cityName                String required           /** 城市名称 */
+    websiteContact          String required           /** 网站联系人 */
+    websiteContactNumber    String required           /** 网站联系人电话 */
+    logo                    String required           /** 网站logo */
+    headerImg               String required           /** 顶部背景图 */
+    businessNumber          String required           /** 业务咨询电话 */
+    address                 String required           /** 机构地址 */
+    methodologyIds          String required           /** 可展示方法学（按顺序） */
+    addTime                 ZonedDateTime required    /** 添加时间 */
+}
+
+/** 用户 */
+entity EcoUser(eco_user) {
+    websiteId    Long required                                  /** 所属网站ID */
+	login        String required unique                         /** 用户名 */
+	password     String required minlength(60) maxlength(60)    /** 密码 */
+    realName     String required                                /** 姓名 */
+    roleCode     String required                                /** 角色编码: ROLE_ADMIN | ROLE_MANAGER */
+    addTime      ZonedDateTime required                         /** 添加时间 */
+}
+
+/** 方法学 */
+entity Methodology(eco_methodology) {
+	type            String required unique              /** 类型 */
+    name            String required                     /** 名称 */
+    introduction    String required maxlength(1000)     /** 简介 */
+    image           String required                     /** 图片 */
+    attachment      String required                     /** 方法学文件 */
+    addTime         ZonedDateTime required              /** 添加时间 */
+}
+
+/** 头条新闻 */
+entity HeadlineNews(eco_headline_news) {
+	websiteId       Long required               /** 所属网站ID */
+	sequence        Integer required            /** 轮播顺序 */
+	title           String required             /** 标题 */
+    image           String required             /** 图片 */
+    introduction    String maxlength(1000)      /** 简介 */
+    addTime         ZonedDateTime required      /** 添加时间 */
+    status          String required             /** 状态: 已发布 | 未发布 */
+}
+
+/** 政策资讯 */
+entity News(eco_news) {
+	websiteId     Long required         /** 所属网站ID */
+	title         String required       /** 标题 */
+    createTime    Instant required      /** 创建时间 */
+    createDate    LocalDate required    /** 添加日期 */
+    type          String required       /** 类型: 林草新闻 | 地方动态 | 政策法规 */
+    author        String                /** 作者 */
+    source        String                /** 来源: 自定义 */
+    content       TextBlob required     /** 内容: 富文本 */
+    status        String required       /** 状态: 已发布 | 未发布 */
+}
+
+/** 生态资源 */
+entity EcoResource(eco_resource) {
+	websiteId       Long required               /** 所属网站ID */
+	sequence        Integer required            /** 轮播顺序 */
+	title           String required             /** 标题 */
+    image           String required             /** 图片 */
+    introduction    String maxlength(1000)      /** 简介 */
+    addTime         ZonedDateTime required      /** 添加时间 */
+    status          String required             /** 状态: 已发布 | 未发布 */
+}
+
+/** 生态系统碳汇优质项目 */
+entity EcoQualityProject(eco_quality_project) {
+	websiteId       Long required           /** 所属网站ID */
+    name            String required         /** 项目名称 */
+    method          String required         /** 方法学：CCER | 碳惠普 */
+    type            String required         /** 项目类型 */
+    provinceName    String required         /** 省份名 */
+    provinceId      Long required           /** 省份ID */
+    preSink         BigDecimal required     /** 预计排放量 */
+    recordSink      BigDecimal required     /** 已备案排放量 */
+    picUrl          String required         /** 项目图片地址 */
+    description     String required         /** 项目简介 */
+    tradePhone      String required         /** 交易电话 */
+    createTime      Instant required        /** 创建时间 */
+    createDate      LocalDate required      /** 创建日期 */
+    status          String required         /** 状态: 已发布 | 未发布 */
+}
+
+/**
+relationship OneToMany {
+	Methodology to Website
+	Website to EcoUser
+    Website to HeadlineNews
+    Website to News
+    Website to EcoResourcex
+    Website to EcoQualityProject
+}
+*/

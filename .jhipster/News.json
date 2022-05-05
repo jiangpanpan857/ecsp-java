@@ -1,0 +1,71 @@
+{
+  "applications": "*",
+  "changelogDate": "20220505091610",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "eco_news",
+  "fields": [
+    {
+      "fieldName": "websiteId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"],
+      "javadoc": "所属网站ID"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "标题"
+    },
+    {
+      "fieldName": "createTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"],
+      "javadoc": "创建时间"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"],
+      "javadoc": "添加日期"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "类型: 林草新闻 | 地方动态 | 政策法规"
+    },
+    {
+      "fieldName": "author",
+      "fieldType": "String",
+      "javadoc": "作者"
+    },
+    {
+      "fieldName": "source",
+      "fieldType": "String",
+      "javadoc": "来源: 自定义"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"],
+      "javadoc": "内容: 富文本"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "状态: 已发布 | 未发布"
+    }
+  ],
+  "fluentMethods": true,
+  "incrementalChangelog": true,
+  "javadoc": "政策资讯",
+  "jpaMetamodelFiltering": false,
+  "name": "News",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

@@ -1,0 +1,61 @@
+{
+  "applications": "*",
+  "changelogDate": "20220505091609",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "eco_headline_news",
+  "fields": [
+    {
+      "fieldName": "websiteId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"],
+      "javadoc": "所属网站ID"
+    },
+    {
+      "fieldName": "sequence",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"],
+      "javadoc": "轮播顺序"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "标题"
+    },
+    {
+      "fieldName": "image",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "图片"
+    },
+    {
+      "fieldName": "introduction",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1000",
+      "javadoc": "简介"
+    },
+    {
+      "fieldName": "addTime",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"],
+      "javadoc": "添加时间"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "状态: 已发布 | 未发布"
+    }
+  ],
+  "fluentMethods": true,
+  "incrementalChangelog": true,
+  "javadoc": "头条新闻",
+  "jpaMetamodelFiltering": false,
+  "name": "HeadlineNews",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

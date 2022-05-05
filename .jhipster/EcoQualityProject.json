@@ -1,0 +1,102 @@
+{
+  "applications": "*",
+  "changelogDate": "20220505091612",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "eco_quality_project",
+  "fields": [
+    {
+      "fieldName": "websiteId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"],
+      "javadoc": "所属网站ID"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "项目名称"
+    },
+    {
+      "fieldName": "method",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "方法学：CCER | 碳惠普"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "项目类型"
+    },
+    {
+      "fieldName": "provinceName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "省份名"
+    },
+    {
+      "fieldName": "provinceId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"],
+      "javadoc": "省份ID"
+    },
+    {
+      "fieldName": "preSink",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"],
+      "javadoc": "预计排放量"
+    },
+    {
+      "fieldName": "recordSink",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"],
+      "javadoc": "已备案排放量"
+    },
+    {
+      "fieldName": "picUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "项目图片地址"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "项目简介"
+    },
+    {
+      "fieldName": "tradePhone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "交易电话"
+    },
+    {
+      "fieldName": "createTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"],
+      "javadoc": "创建时间"
+    },
+    {
+      "fieldName": "createDate",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"],
+      "javadoc": "创建日期"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "状态: 已发布 | 未发布"
+    }
+  ],
+  "fluentMethods": true,
+  "incrementalChangelog": true,
+  "javadoc": "生态系统碳汇优质项目",
+  "jpaMetamodelFiltering": false,
+  "name": "EcoQualityProject",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}

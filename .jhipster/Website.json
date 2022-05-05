@@ -1,0 +1,102 @@
+{
+  "applications": "*",
+  "changelogDate": "20220505091606",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "eco_website",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"],
+      "javadoc": "网站名称"
+    },
+    {
+      "fieldName": "domain",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"],
+      "javadoc": "网站域名"
+    },
+    {
+      "fieldName": "carbonLibraAccount",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "碳天枰账号ID"
+    },
+    {
+      "fieldName": "organizationName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "机构名称"
+    },
+    {
+      "fieldName": "cityId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "城市ID"
+    },
+    {
+      "fieldName": "cityName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "城市名称"
+    },
+    {
+      "fieldName": "websiteContact",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "网站联系人"
+    },
+    {
+      "fieldName": "websiteContactNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "网站联系人电话"
+    },
+    {
+      "fieldName": "logo",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "网站logo"
+    },
+    {
+      "fieldName": "headerImg",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "顶部背景图"
+    },
+    {
+      "fieldName": "businessNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "业务咨询电话"
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "机构地址"
+    },
+    {
+      "fieldName": "methodologyIds",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "可展示方法学（按顺序）"
+    },
+    {
+      "fieldName": "addTime",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"],
+      "javadoc": "添加时间"
+    }
+  ],
+  "fluentMethods": true,
+  "incrementalChangelog": true,
+  "javadoc": "网站",
+  "jpaMetamodelFiltering": false,
+  "name": "Website",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [],
+  "service": "no"
+}
