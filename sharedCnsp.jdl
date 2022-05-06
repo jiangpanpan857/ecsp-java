@@ -1,0 +1,73 @@
+/** 森林数据表 */
+entity ForestData {
+    provinceName        String          /** 省份名 */
+    provinceId          String          /** 省份ID */
+    cityName            String          /** 城市名 */
+    cityId              String          /** 城市ID */
+    year                String          /** 年份 */
+    areaIncrement       BigDecimal      /** 新增造林面积 */
+    storage             BigDecimal      /** 森林蓄积量 */
+}
+
+/** 碳汇交易表 */
+entity CarbonTrade {
+    type                String          /** 交易类型: CCER, CEA, ... */
+    provinceName        String          /** 省份名 */
+    amount              BigDecimal      /** 成交量（吨） */
+    averagePrice        BigDecimal      /** 成交均价（元/吨） */
+    totalPrice          BigDecimal      /** 成交额（元） */
+    tradeDate           LocalDate       /** 日期 */
+    extraInfo           TextBlob        /** 额外JSON信息 */
+}
+
+/** 省市区 */
+entity District {
+    pid               Long            /** 上级id */
+    deep              Integer         /** 层级深度[0:省,1:市,2:区,3:镇] */
+    name              String          /** 城市名称 */
+    pinyin            String          /** 城市名称的全拼 */
+    prefix            String          /** 城市名称拼音第一个字母 */
+    extId             Long            /** 数据源原始编号，如果是添加的数据，此编号为0 */
+    extName           String          /** 数据源原始名称，为未精简的名称 */
+}
+
+/** 用户 */
+entity User(sys_user) {
+    login String required /** 登录账号 */
+	password String required minlength(60) maxlength(60)  /** 密码 */
+	nickName String required /** 用户昵称 */
+	remark String /** 备注 */
+	enterpriseId Long /** 水厂企业ID */
+	companyId Long /** 业主ID */
+	thirdPartyId Long  /** 第三方机构ID */
+	status UserStatusType required /** 用户状态 */
+}
+/**
+ * 用户状态类型
+ * 正常|删除|停用|冻结
+ */
+enum UserStatusType {
+    NORMAL,
+    DELETE,
+    DISABLE
+}
+
+/** 业主信息表 */
+entity SysCompany{
+    companyName String required /** 企业名称 */
+    uniCreditCode String required /** 统一社会信用代码 */
+    contactPhone String required /** 联系方式 */
+    companyAddress String  /** 企业地址 */
+    companyPostCode String  /** 企业邮编 */
+    legalPerson String  /** 企业法人 */
+    legalPersonPosition String  /** 法人职位 */
+    companyFax String  /** 企业传真 */
+    companyTel String  /** 企业电话 */
+    companyMail String  /** 企业邮箱 */
+    status CompanyStatusType  /** 状态 */
+}
+/** 企业状态类型[正常|删除] */
+enum CompanyStatusType {
+    NORMAL,
+    DELETE
+}
