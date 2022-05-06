@@ -23,6 +23,7 @@ class StaticResourcesWebConfigurerTest {
     private ResourceHandlerRegistry resourceHandlerRegistry;
     private MockServletContext servletContext;
     private WebApplicationContext applicationContext;
+    private ApplicationProperties applicationProperties;
     private JHipsterProperties props;
 
     @BeforeEach
@@ -31,7 +32,7 @@ class StaticResourcesWebConfigurerTest {
         applicationContext = mock(WebApplicationContext.class);
         resourceHandlerRegistry = spy(new ResourceHandlerRegistry(applicationContext, servletContext));
         props = new JHipsterProperties();
-        staticResourcesWebConfiguration = Mockito.spy(new StaticResourcesWebConfiguration(props));
+        staticResourcesWebConfiguration = Mockito.spy(new StaticResourcesWebConfiguration(props, applicationProperties));
     }
 
     @Test

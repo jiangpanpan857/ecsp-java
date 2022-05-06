@@ -9,4 +9,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * See {@link tech.jhipster.config.JHipsterProperties} for a good example.
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
-public class ApplicationProperties {}
+public class ApplicationProperties {
+    private String uploadPath;
+
+    public String getUploadPath() {
+        return uploadPath;
+    }
+
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
+    }
+
+}

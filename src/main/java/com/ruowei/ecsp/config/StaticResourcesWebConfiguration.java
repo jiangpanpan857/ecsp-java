@@ -11,22 +11,25 @@ import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 
 @Configuration
-@Profile({ JHipsterConstants.SPRING_PROFILE_PRODUCTION })
+//@Profile({ JHipsterConstants.SPRING_PROFILE_PRODUCTION })
 public class StaticResourcesWebConfiguration implements WebMvcConfigurer {
 
     protected static final String[] RESOURCE_LOCATIONS = new String[] { "file:./public/", "file:./public/static/" };
     protected static final String[] RESOURCE_PATHS = new String[] { "/**.js", "/**.css", "/**.svg", "/**.png", "/**.ico", "/static/**" };
 
     private final JHipsterProperties jhipsterProperties;
+    private final ApplicationProperties applicationProperties;
 
-    public StaticResourcesWebConfiguration(JHipsterProperties jHipsterProperties) {
+    public StaticResourcesWebConfiguration(JHipsterProperties jHipsterProperties, ApplicationProperties applicationProperties) {
         this.jhipsterProperties = jHipsterProperties;
+        this.applicationProperties = applicationProperties;
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         ResourceHandlerRegistration resourceHandlerRegistration = appendResourceHandler(registry);
         initializeResourceHandler(resourceHandlerRegistration);
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:" + applicationProperties.getUploadPath());
     }
 
     protected ResourceHandlerRegistration appendResourceHandler(ResourceHandlerRegistry registry) {
