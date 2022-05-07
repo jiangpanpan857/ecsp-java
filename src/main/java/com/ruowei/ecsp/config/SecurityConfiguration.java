@@ -1,8 +1,6 @@
 package com.ruowei.ecsp.config;
 
-import com.ruowei.ecsp.security.*;
 import com.ruowei.ecsp.security.AuthoritiesConstants;
-import com.ruowei.ecsp.security.jwt.*;
 import com.ruowei.ecsp.security.jwt.JWTConfigurer;
 import com.ruowei.ecsp.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.web.filter.CorsFilter;
@@ -74,37 +71,39 @@ public class SecurityConfiguration {
         .and()
             .addFilterBefore(corsFilter, CsrfFilter.class)
             .exceptionHandling()
-                .authenticationEntryPoint(problemSupport)
-                .accessDeniedHandler(problemSupport)
-        .and()
+            .authenticationEntryPoint(problemSupport)
+            .accessDeniedHandler(problemSupport)
+            .and()
             .headers()
             .contentSecurityPolicy(jHipsterProperties.getSecurity().getContentSecurityPolicy())
-        .and()
+            .and()
             .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
-        .and()
+            .and()
             .permissionsPolicy().policy("camera=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()")
-        .and()
+            .and()
             .frameOptions()
             .deny()
-        .and()
+            .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/upload/**").permitAll()   // 本项目文件设置无权限即可访问
             .antMatchers("/api/file/upload").permitAll()
-            .antMatchers("/api/cor/permit/**").permitAll()
-            .antMatchers("/api/eco-news/permit/**").permitAll()
-            .antMatchers("/api/eco-quality-project/permit/**").permitAll()
-            .antMatchers("/api/eco-resource/permit/**").permitAll()
-            .antMatchers("/api/headline-news/permit/**").permitAll()
-            .antMatchers("/api/methodology/permit/**").permitAll()
+            .antMatchers("/api/**/permit/**").permitAll()
+//            .antMatchers("/api/cor/permit/**").permitAll()
+//            .antMatchers("/api/eco-user/permit/**").permitAll()
+//            .antMatchers("/api/eco-news/permit/**").permitAll()
+//            .antMatchers("/api/eco-quality-project/permit/**").permitAll()
+//            .antMatchers("/api/eco-resource/permit/**").permitAll()
+//            .antMatchers("/api/headline-news/permit/**").permitAll()
+//            .antMatchers("/api/methodology/permit/**").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-        .and()
+            .and()
             .httpBasic()
-        .and()
+            .and()
             .apply(securityConfigurerAdapter());
         return http.build();
         // @formatter:on

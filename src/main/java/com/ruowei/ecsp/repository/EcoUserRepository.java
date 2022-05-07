@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data SQL repository for the EcoUser entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface EcoUserRepository extends JpaRepository<EcoUser, Long> {
     Optional<EcoUser> findOneByLogin(String login);
+
+    boolean existsByLoginAndIdNot(String login, Long id);
 }
