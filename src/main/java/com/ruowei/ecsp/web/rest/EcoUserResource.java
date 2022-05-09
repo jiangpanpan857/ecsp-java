@@ -34,7 +34,6 @@ public class EcoUserResource {
         this.ecoUserService = ecoUserService;
     }
 
-
     @PostMapping("")
     @ApiOperation(value = "新增生态系统网站管理员", notes = "author: czz")
     public ResponseEntity<String> createEcoUser(@RequestBody EcoUser ecoUser) {
@@ -49,7 +48,7 @@ public class EcoUserResource {
         return ResponseEntity.ok().body("success edit");
     }
 
-    @GetMapping("/permit")
+    @GetMapping("")
     @ApiOperation(value = "获取用户列表", notes = "author: czz")
     public ResponseEntity<List<EcoUserDTO>> getAll(EcoUserQM qm,
                                                    @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {

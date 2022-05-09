@@ -3,7 +3,9 @@ package com.ruowei.ecsp.web.rest;
 import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.WebsiteService;
+import com.ruowei.ecsp.util.StreamUtil;
 import com.ruowei.ecsp.web.rest.dto.WebsiteDownListDTO;
+import com.ruowei.ecsp.web.rest.dto.WebsiteVisDTO;
 import com.ruowei.ecsp.web.rest.qm.WebsiteListQM;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,10 +54,18 @@ public class WebsiteResource {
     }
 
     @GetMapping("")
-    @ApiOperation(value = "获取网站", notes = "author: czz")
+    @ApiOperation(value = "获取网站(系统管理员)", notes = "author: czz")
     public ResponseEntity<List<Website>> getAll(WebsiteListQM qm,
                                                 @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return websiteService.getAllWebsites(qm, pageable);
+    }
+
+
+    @GetMapping("/permit")
+    @ApiOperation(value = "获取网站(访客)", notes = "author: czz")
+    public ResponseEntity<WebsiteVisDTO> getPermitted(String domain) {
+        WebsiteVisDTO dto = websiteRepository.getWebsiteVis(domain); // 只通过域名访问
+        return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")

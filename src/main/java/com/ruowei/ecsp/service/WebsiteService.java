@@ -6,6 +6,7 @@ import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.util.AssertUtil;
 import com.ruowei.ecsp.util.PageUtil;
+import com.ruowei.ecsp.util.StreamUtil;
 import com.ruowei.ecsp.web.rest.qm.WebsiteListQM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -49,11 +51,16 @@ public class WebsiteService {
         return PageUtil.pageReturn(page);
     }
 
+    public Website getWebsiteByDomain(@NotNull String domain) {
+        return StreamUtil.optionalValue(websiteRepository.findByDomain(domain), "获取失败！", "该域名不存在");
+    }
+
     private void assertWebsite(Website site) {
         if (site.getId() == null) {
-            AssertUtil.thenThrow(websiteRepository.existsByDomain(site.getDomain()), "新增网站失败！",  "该域名已被占用");
+            AssertUtil.thenThrow(websiteRepository.existsByDomain(site.getDomain()), "新增网站失败！", "该域名已被占用");
         } else {
-            AssertUtil.thenThrow(websiteRepository.existsByDomainAndIdNot(site.getDomain(), site.getId()), "修改网站失败！",  "该域名已被占用");
+            AssertUtil.thenThrow(websiteRepository.existsByDomainAndIdNot(site.getDomain(), site.getId()), "修改网站失败！", "该域名已被占用");
         }
     }
+
 }

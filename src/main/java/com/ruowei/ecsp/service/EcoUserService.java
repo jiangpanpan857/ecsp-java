@@ -7,8 +7,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ruowei.ecsp.domain.EcoUser;
 import com.ruowei.ecsp.domain.QEcoUser;
 import com.ruowei.ecsp.domain.QWebsite;
+import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.EcoUserRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
+import com.ruowei.ecsp.security.UserModel;
 import com.ruowei.ecsp.util.AssertUtil;
 import com.ruowei.ecsp.util.PageUtil;
 import com.ruowei.ecsp.util.StreamUtil;
@@ -17,6 +19,8 @@ import com.ruowei.ecsp.web.rest.qm.EcoUserQM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +35,43 @@ public class EcoUserService {
     private final EcoUserRepository ecoUserRepository;
     private final WebsiteRepository websiteRepository;
 
+    private final WebsiteService websiteService;
+
     private final JPAQueryFactory jpaQueryFactory;
     private QEcoUser qEcoUser = QEcoUser.ecoUser;
     private QWebsite qWebsite = QWebsite.website;
 
 
-    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, JPAQueryFactory jpaQueryFactory) {
+    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, WebsiteService websiteService, JPAQueryFactory jpaQueryFactory) {
         this.passwordEncoder = passwordEncoder;
         this.ecoUserRepository = ecoUserRepository;
         this.websiteRepository = websiteRepository;
+        this.websiteService = websiteService;
         this.jpaQueryFactory = jpaQueryFactory;
+    }
+
+    public Long getWebsiteId(String domain) {
+        Long websiteId;
+        if (domain == null) {
+            try {
+                UserModel userModel = getUserModel();
+                websiteId = userModel.getWebsiteId();
+            } catch (Exception e) {
+                throw new RuntimeException("未登录");
+            }
+        } else {
+            Website website = websiteService.getWebsiteByDomain(domain);
+            websiteId = website.getId();
+        }
+        return websiteId;
+
+    }
+
+    public UserModel getUserModel() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        EcoUser ecoUser = ecoUserRepository.findOneByLogin(user.getUsername()).orElseThrow(() -> new RuntimeException("用户不存在"));
+        Website site = websiteRepository.getById(ecoUser.getWebsiteId());
+        return new UserModel(ecoUser, site);
     }
 
     public void createEcoUser(EcoUser ecoUser) {
