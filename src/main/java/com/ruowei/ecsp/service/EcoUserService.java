@@ -15,6 +15,7 @@ import com.ruowei.ecsp.util.AssertUtil;
 import com.ruowei.ecsp.util.PageUtil;
 import com.ruowei.ecsp.util.StreamUtil;
 import com.ruowei.ecsp.web.rest.dto.EcoUserDTO;
+import com.ruowei.ecsp.web.rest.mapper.EcoUserDTOMapper;
 import com.ruowei.ecsp.web.rest.qm.EcoUserQM;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -23,30 +24,37 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 public class EcoUserService {
 
     private final PasswordEncoder passwordEncoder;
+
     private final EcoUserRepository ecoUserRepository;
     private final WebsiteRepository websiteRepository;
 
     private final WebsiteService websiteService;
+
+    private final EcoUserDTOMapper ecoUserDTOMapper;
+
 
     private final JPAQueryFactory jpaQueryFactory;
     private QEcoUser qEcoUser = QEcoUser.ecoUser;
     private QWebsite qWebsite = QWebsite.website;
 
 
-    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, WebsiteService websiteService, JPAQueryFactory jpaQueryFactory) {
+    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, WebsiteService websiteService, EcoUserDTOMapper ecoUserDTOMapper, JPAQueryFactory jpaQueryFactory) {
         this.passwordEncoder = passwordEncoder;
         this.ecoUserRepository = ecoUserRepository;
         this.websiteRepository = websiteRepository;
         this.websiteService = websiteService;
+        this.ecoUserDTOMapper = ecoUserDTOMapper;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
@@ -92,7 +100,7 @@ public class EcoUserService {
         JPAQuery<EcoUserDTO> query = jpaQueryFactory.select(Projections.bean(EcoUserDTO.class, qEcoUser.id, qWebsite.id.as("websiteId"), qEcoUser.login, qEcoUser.password, qEcoUser.realName, qEcoUser.roleCode, qEcoUser.addTime, qWebsite.name.as("websiteName")))
             .from(qEcoUser)
             .leftJoin(qWebsite).on(qEcoUser.websiteId.eq(qWebsite.id))
-            .where(builder.and(qEcoUser.websiteId.isNotNull())); // admin无网站
+            .where(builder.and(qEcoUser.roleCode.ne("ROLE_ADMIN"))); // admin无网站
         long count = query.stream().count();
         List<EcoUserDTO> users = query
             .limit(pageable.getPageSize())
@@ -118,5 +126,12 @@ public class EcoUserService {
         } else {
             AssertUtil.thenThrow(ecoUserRepository.findOneByLogin(ecoUser.getLogin()).isPresent(), "新增网站管理员失败", "用户名已存在");
         }
+    }
+
+    public ResponseEntity<EcoUserDTO> getEcoUser(Long id) {
+        EcoUser ecoUser = ecoUserRepository.findById(id).orElseThrow(() -> new RuntimeException("用户不存在"));
+        EcoUserDTO dto = ecoUserDTOMapper.toDto(ecoUser);
+        dto.setWebsiteName(websiteRepository.getById(ecoUser.getWebsiteId()).getName());
+        return ResponseEntity.ok(dto);
     }
 }

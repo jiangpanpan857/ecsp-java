@@ -17,4 +17,7 @@ public class LoginVM {
 
     @Schema(description = "记住我", required = true)
     private boolean rememberMe;
+
+    @Schema(description = "登录域名", required = true)
+    private String domain;
 }

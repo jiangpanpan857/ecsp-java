@@ -6,8 +6,8 @@ import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.EcoUserService;
 import com.ruowei.ecsp.web.rest.dto.EcoUserDTO;
 import com.ruowei.ecsp.web.rest.qm.EcoUserQM;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/eco-user")
 @Transactional
-@Api(tags = "生态系统网站用户管理")
+@Tag(name = "生态系统网站用户管理")
 public class EcoUserResource {
 
     private final EcoUserRepository ecoUserRepository;
@@ -35,28 +35,34 @@ public class EcoUserResource {
     }
 
     @PostMapping("")
-    @ApiOperation(value = "新增生态系统网站管理员", notes = "author: czz")
+    @Operation(summary = "新增生态系统网站管理员", description = "author: czz")
     public ResponseEntity<String> createEcoUser(@RequestBody EcoUser ecoUser) {
         ecoUserService.createEcoUser(ecoUser);
         return ResponseEntity.ok().body("success add");
     }
 
     @PutMapping("")
-    @ApiOperation(value = "编辑修改生态系统网站管理员", notes = "author: czz")
+    @Operation(summary = "编辑修改生态系统网站管理员", description = "author: czz")
     public ResponseEntity<String> editEcoUser(@RequestBody EcoUser ecoUser) {
         ecoUserService.updateEcoUser(ecoUser);
         return ResponseEntity.ok().body("success edit");
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "查询生态系统网站管理员详情", description = "author: czz")
+    public ResponseEntity<EcoUserDTO> getEcoUser(@PathVariable Long id) {
+        return ecoUserService.getEcoUser(id);
+    }
+
     @GetMapping("")
-    @ApiOperation(value = "获取用户列表", notes = "author: czz")
+    @Operation(summary = "获取用户列表", description = "author: czz")
     public ResponseEntity<List<EcoUserDTO>> getAll(EcoUserQM qm,
                                                    @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return ecoUserService.getEcoUsers(qm, pageable);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "删除生态系统网站管理员", notes = "author: czz")
+    @Operation(summary = "删除生态系统网站管理员", description = "author: czz")
     public ResponseEntity<String> deleteEcoUser(@PathVariable Long id) {
         ecoUserRepository.deleteById(id);
         return ResponseEntity.ok().body("success delete");
