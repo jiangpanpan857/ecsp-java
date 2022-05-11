@@ -10,6 +10,8 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.ruowei.ecsp.config.Constants.ZERO;
+
 
 public class StreamUtil {
 
@@ -22,6 +24,14 @@ public class StreamUtil {
      */
     public static <T> List<T> sortedCollect(Collection<T> collection, Comparator<T> comparator) {
         return collection.stream().sorted(comparator).collect(Collectors.toList());
+    }
+
+    public static  <K,V> List<V> sortedCollectV(Collection<K> collection, Comparator<K> comparator,  Function<K, V> function) {
+        return collection.stream().sorted(comparator).map(function).collect(Collectors.toList());
+    }
+
+    public static  <K,V> List<V> sortedCollectV(K[] collection, Comparator<K> comparator,  Function<K, V> function) {
+        return Stream.of(collection).sorted(comparator).map(function).collect(Collectors.toList());
     }
 
 
@@ -108,8 +118,15 @@ public class StreamUtil {
      */
     public static <K> List<K> filterResetCollect(List<K> kValues, Predicate<K> predicate, Consumer<K> consumer) {
         return kValues.stream().filter(predicate).peek(consumer).collect(Collectors.toList());
+
+    }
+    public static BigDecimal streamAdd(Stream<BigDecimal> stream) {
+        return stream.filter(Objects::nonNull).reduce(ZERO, BigDecimal::add);
     }
 
+    public static <K> BigDecimal sumProperty(List<K> kValues, Function<K, BigDecimal> function) {
+        return streamAdd(kValues.stream().map(function));
+    }
 
     /**
      * @param kValues

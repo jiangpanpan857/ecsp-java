@@ -103,4 +103,5 @@ public class ListUtil {
     public static <T> Boolean isEmpty(List<T> list) {
         return CollectionUtils.isEmpty(list);
     }
+
 }

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringUtil {
 
@@ -136,6 +137,11 @@ public class StringUtil {
         return str.substring(0, 10).replaceAll("-", "");
     }
 
+    public static List<Long> getLongList(String str) {
+        List<Long> list = Arrays.stream(str.split(",")).map(Long::valueOf).collect(Collectors.toList());
+        return list;
+    }
+
     public static List<String> split(String str, String separator) {
         List<String> list = new ArrayList<>();
         if (StringUtils.isNotBlank(str)) {
@@ -235,5 +241,9 @@ public class StringUtil {
             return "-";
         }
         return str.replaceAll(",", "");
+    }
+
+    public static boolean isNotBlank(String name) {
+        return !StringUtils.isBlank(name);
     }
 }

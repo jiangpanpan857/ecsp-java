@@ -28,7 +28,7 @@ entity EcoUser(eco_user) {
 
 /** 方法学 */
 entity Methodology(eco_methodology) {
-	type            String required unique              /** 类型 */
+	type            String required                     /** 类型 */
     name            String required                     /** 名称 */
     introduction    String required maxlength(1000)     /** 简介 */
     image           String required                     /** 图片 */
