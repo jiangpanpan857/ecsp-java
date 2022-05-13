@@ -136,6 +136,14 @@ public class Website implements Serializable {
     @Column(name = "add_time", nullable = false)
     private ZonedDateTime addTime;
 
+    /**
+     * 碳天秤接口访问token
+     */
+    @Schema(description = "碳天秤接口访问token", required = true)
+    @NotNull
+    @Column(name = "sink_token", nullable = false)
+    private String sinkToken;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -333,6 +341,18 @@ public class Website implements Serializable {
         this.addTime = addTime;
     }
 
+    public String getSinkToken() {
+        return sinkToken;
+    }
+
+    public Website sinkToken(String sinkToken) {
+        this.sinkToken = sinkToken;
+        return this;
+    }
+    public void setSinkToken(String sinkToken) {
+        this.sinkToken = sinkToken;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -371,6 +391,7 @@ public class Website implements Serializable {
             ", address='" + getAddress() + "'" +
             ", methodologyIds='" + getMethodologyIds() + "'" +
             ", addTime='" + getAddTime() + "'" +
+            ", sinkToken='" + getSinkToken() + "'" +
             "}";
     }
 }

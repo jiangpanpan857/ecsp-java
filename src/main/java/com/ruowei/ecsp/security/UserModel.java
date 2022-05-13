@@ -14,9 +14,6 @@ public class UserModel {
     // 用户ID
     private Long userId;
 
-    // websiteId
-    private Long websiteId;
-
     // 用户登录名
     private String login;
 
@@ -26,16 +23,30 @@ public class UserModel {
     // roleType
     private String roleCode;
 
+    // websiteId
+    private Long websiteId;
+
     // 网站名
     private String websiteName;
 
-    public UserModel(EcoUser ecoUser, Website site) {
+    private Long companyId;
+
+    private Long sysUserId;
+
+    private String sinkToken;
+
+    public UserModel(EcoUser ecoUser) {
         this.userId = ecoUser.getId();
-        this.websiteId = site.getId();
         this.login = ecoUser.getLogin();
         this.realName = ecoUser.getRealName();
         this.roleCode = ecoUser.getRoleCode();
-        this.websiteName = site.getName();
+    }
+
+    public void setNeeded(Website website, Long companyId, Long sysUserId) {
+        this.websiteId = website.getId();
+        this.websiteName = website.getName();
+        this.companyId = companyId;
+        this.sysUserId = sysUserId;
     }
 
 }

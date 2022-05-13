@@ -11,9 +11,9 @@ import com.ruowei.ecsp.util.DESUtil;
 import com.ruowei.ecsp.web.rest.dto.*;
 import com.ruowei.ecsp.web.rest.errors.BadRequestProblem;
 import com.ruowei.ecsp.web.rest.qm.ForestDataQM;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +36,7 @@ import java.util.stream.IntStream;
 @RestController
 @RequestMapping("/api/cor")
 @Transactional
-@Api(tags = "公用数据查询模块")
+@Tag(name = "公用数据查询模块")
 public class EcoCorResource {
 
     private final ForestDataRepository forestDataRepository;

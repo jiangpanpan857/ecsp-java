@@ -5,10 +5,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,12 +16,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import tech.jhipster.config.JHipsterProperties;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
+
 @Component
 public class TokenProvider {
 
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String USERID_KEY = "uid";
+    private static final String NICKNAME_KEY = "unm";
+    private static final String ENTERPRISEID_KEY = "eid";
+    private static final String ENTERPRISENAME_KEY = "enm";
+    private static final String COMPANYID_KEY = "cid";
+    private static final String THIRD_PARTY_KEY = "tpid";
 
     private static final String INVALID_JWT_TOKEN = "Invalid JWT token.";
 
@@ -36,6 +45,7 @@ public class TokenProvider {
     private final long tokenValidityInMilliseconds;
 
     private final long tokenValidityInMillisecondsForRememberMe;
+    private final long tokenValidityInMillisecondsForSiteRelativeSin;
 
     private final SecurityMetersService securityMetersService;
 
@@ -48,7 +58,7 @@ public class TokenProvider {
         } else {
             log.warn(
                 "Warning: the JWT key used is not Base64-encoded. " +
-                "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security."
+                    "We recommend using the `jhipster.security.authentication.jwt.base64-secret` key for optimum security."
             );
             secret = jHipsterProperties.getSecurity().getAuthentication().getJwt().getSecret();
             keyBytes = secret.getBytes(StandardCharsets.UTF_8);
@@ -58,6 +68,8 @@ public class TokenProvider {
         this.tokenValidityInMilliseconds = 1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds();
         this.tokenValidityInMillisecondsForRememberMe =
             1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe();
+        this.tokenValidityInMillisecondsForSiteRelativeSin =
+            1000 * this.tokenValidityInMillisecondsForRememberMe;
 
         this.securityMetersService = securityMetersService;
     }
@@ -81,6 +93,7 @@ public class TokenProvider {
             .setExpiration(validity)
             .compact();
     }
+
 
     public Authentication getAuthentication(String token) {
         Claims claims = jwtParser.parseClaimsJws(token).getBody();

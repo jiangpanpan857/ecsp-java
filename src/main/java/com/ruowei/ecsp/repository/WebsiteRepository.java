@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ public interface WebsiteRepository extends JpaRepository<Website, Long>, Queryds
     boolean existsByDomain(String domain);
 
     boolean existsByDomainAndIdNot(String domain, Long id);
+
+    boolean existsByMethodologyIdsContains(@NotNull String idStr);
 
     @Query(value = "select new com.ruowei.ecsp.web.rest.dto.WebsiteDownListDTO(w.id, w.name) from Website w WHERE  1 = 1 order by  w.addTime desc ")
     List<WebsiteDownListDTO> getWebsiteDownList();

@@ -88,6 +88,12 @@
       "fieldType": "ZonedDateTime",
       "fieldValidateRules": ["required"],
       "javadoc": "添加时间"
+    },
+    {
+      "fieldName": "sinkToken",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "碳天秤接口访问token"
     }
   ],
   "fluentMethods": true,

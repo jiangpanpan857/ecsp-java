@@ -3,13 +3,13 @@ package com.ruowei.ecsp.web.rest;
 import com.ruowei.ecsp.service.CooperateService;
 import com.ruowei.ecsp.web.rest.dto.SinUserDTO;
 import com.ruowei.ecsp.web.rest.qm.SinUserQM;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +29,12 @@ public class CooperateResource {
     public ResponseEntity<List<SinUserDTO>> getAllCooperateUsers(SinUserQM qm) {
         List<SinUserDTO> dtos = cooperateService.getAllCooperateUsers(qm);
         return ResponseEntity.ok().body(dtos);
+    }
+
+
+    @PostMapping("/sink-project-file/download")
+    @Operation(summary = "下载碳汇项目文件接口", description = "作者：czz")
+    public ResponseEntity<Resource> downloadSinkProjectFile(@RequestParam String url) {
+        return cooperateService.downloadSinkProjectFile(url);
     }
 }

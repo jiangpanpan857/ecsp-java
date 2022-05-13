@@ -4,11 +4,12 @@ import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.WebsiteService;
 import com.ruowei.ecsp.util.StreamUtil;
+import com.ruowei.ecsp.web.rest.dto.WebsiteDetailDTO;
 import com.ruowei.ecsp.web.rest.dto.WebsiteDownListDTO;
 import com.ruowei.ecsp.web.rest.dto.WebsiteVisDTO;
 import com.ruowei.ecsp.web.rest.qm.WebsiteListQM;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/website")
 @Transactional
-@Api(tags = "网站管理")
+@Tag(name = "网站管理")
 public class WebsiteResource {
 
     private final WebsiteService websiteService;
@@ -33,44 +34,53 @@ public class WebsiteResource {
     }
 
     @GetMapping("/down-list")
-    @ApiOperation(value = "获取网站下拉列表（用户管理用）", notes = "author: czz")
+    @Operation(summary = "获取网站下拉列表（用户管理用）", description = "author: czz")
     public ResponseEntity<List<WebsiteDownListDTO>> getWebsiteDownList() {
         List<WebsiteDownListDTO> websiteDownList = websiteRepository.getWebsiteDownList();
         return ResponseEntity.ok().body(websiteDownList);
     }
 
     @PostMapping("")
-    @ApiOperation(value = "新增网站", notes = "author: czz")
-    public ResponseEntity<String> createWebsite(Website site) {
+    @Operation(summary = "新增网站", description = "author: czz")
+    public ResponseEntity<String> createWebsite(@RequestBody Website site) {
         websiteService.createWebsite(site);
         return ResponseEntity.ok().body("success");
     }
 
     @PutMapping("")
-    @ApiOperation(value = "修改网站", notes = "author: czz")
-    public ResponseEntity<String> updateWebsite(Website site) {
+    @Operation(summary = "修改网站", description = "author: czz")
+    public ResponseEntity<String> updateWebsite(@RequestBody Website site) {
         websiteService.updateWebsite(site);
         return ResponseEntity.ok().body("success");
     }
 
-    @GetMapping("")
-    @ApiOperation(value = "获取网站(系统管理员)", notes = "author: czz")
-    public ResponseEntity<List<Website>> getAll(WebsiteListQM qm,
-                                                @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        return websiteService.getAllWebsites(qm, pageable);
+    @GetMapping("/{id}")
+    @Operation(summary = "获取指定id网站详情(增加方法学名字段)", description = "author: czz")
+    public ResponseEntity<WebsiteDetailDTO> getWebsiteDetail(@PathVariable Long id) {
+        Website website = StreamUtil.optionalValue(websiteRepository.findById(id), "获取详情失败", "网站不存在");
+        return ResponseEntity.ok().body(websiteService.toWebsiteDetailDTO(website));
     }
 
+    @GetMapping("")
+    @Operation(summary = "获取网站(系统管理员)", description = "author: czz")
+    public ResponseEntity<List<WebsiteDetailDTO>> getAll(WebsiteListQM qm,
+                                                @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        // TODO details login
+        return websiteService.getAllWebsiteDetailDTOS(qm, pageable);
+    }
 
     @GetMapping("/permit")
-    @ApiOperation(value = "获取网站(访客)", notes = "author: czz")
+    @Operation(summary = "获取网站(访客)", description = "author: czz")
     public ResponseEntity<WebsiteVisDTO> getPermitted(String domain) {
         WebsiteVisDTO dto = websiteRepository.getWebsiteVis(domain); // 只通过域名访问
         return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "删除网站", notes = "author: czz")
+    @Operation(summary = "删除网站", description = "author: czz")
     public ResponseEntity<String> deleteWebsite(@PathVariable Long id) {
+        // 删除网站时，同时删除网站下的所有方法?
+        // TODO 网站用户管理员 删除网站时，同时删除网站下的所有方法?
         websiteRepository.deleteById(id);
         return ResponseEntity.ok().body("success");
     }

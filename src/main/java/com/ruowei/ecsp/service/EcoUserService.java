@@ -4,11 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ruowei.ecsp.domain.EcoUser;
-import com.ruowei.ecsp.domain.QEcoUser;
-import com.ruowei.ecsp.domain.QWebsite;
-import com.ruowei.ecsp.domain.Website;
+import com.ruowei.ecsp.domain.*;
 import com.ruowei.ecsp.repository.EcoUserRepository;
+import com.ruowei.ecsp.repository.SysCompanyRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.security.UserModel;
 import com.ruowei.ecsp.util.AssertUtil;
@@ -38,8 +36,10 @@ public class EcoUserService {
 
     private final EcoUserRepository ecoUserRepository;
     private final WebsiteRepository websiteRepository;
+    private final SysCompanyRepository sysCompanyRepository;
 
     private final WebsiteService websiteService;
+    private final CooperateService cooperateService;
 
     private final EcoUserDTOMapper ecoUserDTOMapper;
 
@@ -49,11 +49,13 @@ public class EcoUserService {
     private QWebsite qWebsite = QWebsite.website;
 
 
-    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, WebsiteService websiteService, EcoUserDTOMapper ecoUserDTOMapper, JPAQueryFactory jpaQueryFactory) {
+    public EcoUserService(PasswordEncoder passwordEncoder, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, SysCompanyRepository sysCompanyRepository, WebsiteService websiteService, CooperateService cooperateService, EcoUserDTOMapper ecoUserDTOMapper, JPAQueryFactory jpaQueryFactory) {
         this.passwordEncoder = passwordEncoder;
         this.ecoUserRepository = ecoUserRepository;
         this.websiteRepository = websiteRepository;
+        this.sysCompanyRepository = sysCompanyRepository;
         this.websiteService = websiteService;
+        this.cooperateService = cooperateService;
         this.ecoUserDTOMapper = ecoUserDTOMapper;
         this.jpaQueryFactory = jpaQueryFactory;
     }
@@ -77,9 +79,7 @@ public class EcoUserService {
 
     public UserModel getUserModel() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        EcoUser ecoUser = ecoUserRepository.findOneByLogin(user.getUsername()).orElseThrow(() -> new RuntimeException("用户不存在"));
-        Website site = websiteRepository.getById(ecoUser.getWebsiteId());
-        return new UserModel(ecoUser, site);
+        return cooperateService.currentUser(user.getUsername());
     }
 
     public void createEcoUser(EcoUser ecoUser) {

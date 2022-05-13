@@ -66,12 +66,13 @@ public class UserJWTController {
         // 网站限制 TODO
         Website website = websiteService.getWebsiteByDomain(loginVM.getDomain());
         if (!loginVM.getUsername().equals("admin")) {
-            AssertUtil.falseThrow(ecoUserRepository.existsByLoginAndWebsiteId(loginVM.getUsername(), website.getId()),"登录失败", "用户名或密码错误");
-            token.setDomain(loginVM.getDomain());
+            AssertUtil.falseThrow(ecoUserRepository.existsByLoginAndWebsiteId(loginVM.getUsername(), website.getId()), "登录失败", "用户名或密码错误");
             token.setLogin(loginVM.getUsername());
             token.setWebsiteName(website.getName());
             token.setRealName(ecoUser.getRealName());
+            token.setSinkToken(website.getSinkToken());
         }
+        token.setDomain(loginVM.getDomain());
         token.setLogo(website.getLogo());
         return new ResponseEntity<>(token, httpHeaders, HttpStatus.OK);
     }
@@ -94,6 +95,8 @@ public class UserJWTController {
         private String websiteName;
 
         private String logo;
+
+        private String sinkToken;
 
         JWTToken(String idToken, String roleCode) {
             this.idToken = idToken;
@@ -161,6 +164,15 @@ public class UserJWTController {
 
         void setLogo(String logo) {
             this.logo = logo;
+        }
+
+        @JsonProperty("sink_token")
+        String getSinkToken() {
+            return sinkToken;
+        }
+
+        void setSinkToken(String sinkToken) {
+            this.sinkToken = sinkToken;
         }
 
     }

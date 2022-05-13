@@ -14,6 +14,7 @@ entity Website(eco_website) {
     address                 String required           /** 机构地址 */
     methodologyIds          String required           /** 可展示方法学（按顺序） */
     addTime                 ZonedDateTime required    /** 添加时间 */
+    sinkToken               String required           /** 碳天秤接口访问token */
 }
 
 /** 用户 */

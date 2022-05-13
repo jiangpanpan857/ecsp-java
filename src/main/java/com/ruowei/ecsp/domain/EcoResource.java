@@ -1,5 +1,6 @@
 package com.ruowei.ecsp.domain;
 
+import com.ruowei.ecsp.web.rest.imp.SequenceIMP;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
@@ -15,7 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "eco_resource")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class EcoResource implements Serializable {
+public class EcoResource implements Serializable, SequenceIMP {
 
     private static final long serialVersionUID = 1L;
 
