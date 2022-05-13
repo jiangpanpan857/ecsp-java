@@ -37,6 +37,10 @@ public class PageUtil {
         return ResponseEntity.ok().headers(getPageHeader(pageData)).body(pageData.getContent());
     }
 
+    public static <T,K> ResponseEntity<List<K>> pageReturn(@NotNull Page<T> pageData, List<K> kValues) {
+        return ResponseEntity.ok().headers(getPageHeader(pageData)).body(kValues);
+    }
+
     /**
      * @param list     一页数据【List形式】
      * @param pageable 分页信息
