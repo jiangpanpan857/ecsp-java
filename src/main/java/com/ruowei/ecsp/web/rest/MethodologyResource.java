@@ -15,8 +15,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import tech.jhipster.web.util.ResponseUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/methodology")
@@ -52,7 +54,8 @@ public class MethodologyResource {
     @GetMapping("/{id}")
     @Operation(summary = "获取指定id方法学详情", description= "author: czz")
     public ResponseEntity<Methodology> get(@PathVariable Long id) {
-        return ResponseEntity.ok(methodologyRepository.getById(id));
+        Optional<Methodology> optional = methodologyRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(optional);
     }
 
     @GetMapping("")

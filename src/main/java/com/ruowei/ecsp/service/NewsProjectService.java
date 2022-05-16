@@ -20,16 +20,16 @@ public class NewsProjectService {
     private final NewsRepository newsRepository;
     private final EcoQualityProjectRepository ecoQualityProjectRepository;
 
-    private final WebsiteService websiteService;
+    private final EcoUserService ecoUserService;
 
-    public NewsProjectService(NewsRepository newsRepository, EcoQualityProjectRepository ecoQualityProjectRepository, WebsiteService websiteService) {
+    public NewsProjectService(NewsRepository newsRepository, EcoQualityProjectRepository ecoQualityProjectRepository, EcoUserService ecoUserService) {
         this.newsRepository = newsRepository;
         this.ecoQualityProjectRepository = ecoQualityProjectRepository;
-        this.websiteService = websiteService;
+        this.ecoUserService = ecoUserService;
     }
 
     public ResponseEntity<List<NewsProjectDTO>> searchBy(String name, String domain) {
-        Long websiteId = websiteService.getWebsiteByDomain(domain).getId();
+        Long websiteId = ecoUserService.getWebsiteId(domain);
         name = StringUtil.isNotBlank(name) ? "%" + name + "%" : null;
         List<NewsProjectDTO> dtos = newsRepository.searchByTitle(name, websiteId);
         Stream.of("林草新闻", "地方动态", "政策法规").forEach(type -> {

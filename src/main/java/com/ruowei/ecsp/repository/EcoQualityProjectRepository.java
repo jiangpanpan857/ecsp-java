@@ -20,6 +20,6 @@ public interface EcoQualityProjectRepository extends JpaRepository<EcoQualityPro
     @Query(value = "select distinct e.type from EcoQualityProject e where e.websiteId = ?1")
     List<String> getTypes(Long websiteId);
 
-    @Query(value = "select count(e.id) from EcoQualityProject e where e.websiteId = ?2 and e.status = '已发布' and ((?1 is null) or (e.name = ?1))")
+    @Query(value = "select count(e.id) from EcoQualityProject e where e.websiteId = ?2 and e.status = '已发布' and ((?1 is null) or (e.name like ?1))")
     Long searchByName(String name, Long websiteId);
 }
