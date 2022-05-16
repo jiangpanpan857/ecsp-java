@@ -2,10 +2,13 @@ package com.ruowei.ecsp.web.rest;
 
 import com.ruowei.ecsp.domain.Methodology;
 import com.ruowei.ecsp.repository.MethodologyRepository;
+import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.MethodologyService;
+import com.ruowei.ecsp.util.AssertUtil;
+import com.ruowei.ecsp.web.rest.dto.MethodologyPermitDTO;
 import com.ruowei.ecsp.web.rest.qm.MethodologyQM;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,42 +21,58 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/methodology")
 @Transactional
-@Api(tags = "方法学管理")
+@Tag(name = "方法学管理")
 public class MethodologyResource {
     private final MethodologyService methodologyService;
 
     private final MethodologyRepository methodologyRepository;
+    private final WebsiteRepository websiteRepository;
 
-    public MethodologyResource(MethodologyService methodologyService, MethodologyRepository methodologyRepository) {
+
+    public MethodologyResource(MethodologyService methodologyService, MethodologyRepository methodologyRepository, WebsiteRepository websiteRepository) {
         this.methodologyService = methodologyService;
         this.methodologyRepository = methodologyRepository;
+        this.websiteRepository = websiteRepository;
     }
 
     @PostMapping("")
-    @ApiOperation(value = "新增方法学", notes = "author: czz")
-    public ResponseEntity<String> create(Methodology methodology) {
+    @Operation(summary = "新增方法学", description = "author: czz")
+    public ResponseEntity<String> create(@RequestBody Methodology methodology) {
         methodologyService.createMethodology(methodology);
         return ResponseEntity.ok("OK");
     }
 
     @PutMapping("")
-    @ApiOperation(value = "编辑指定方法学", notes = "author: czz")
-    public ResponseEntity<String> update(Methodology methodology) {
+    @Operation(summary = "编辑指定方法学", description = "author: czz")
+    public ResponseEntity<String> update(@RequestBody Methodology methodology) {
         methodologyService.updateMethodology(methodology);
         return ResponseEntity.ok("OK");
     }
 
-    @GetMapping("/permit")
-    @ApiOperation(value = "获取所有方法学(无需登录)", notes = "author: czz")
-    public ResponseEntity<List<Methodology>> getAll(MethodologyQM qm,
-                                                               @PageableDefault(sort = { "addTime" }, direction = Sort.Direction.DESC) Pageable  pageable) {
-        return methodologyService.searchAll(qm, pageable);
+    @GetMapping("/{id}")
+    @Operation(summary = "获取指定id方法学详情", description= "author: czz")
+    public ResponseEntity<Methodology> get(@PathVariable Long id) {
+        return ResponseEntity.ok(methodologyRepository.getById(id));
     }
 
+    @GetMapping("")
+    @Operation(summary = "条件查询方法学(系统管理员用)", description = "author: czz")
+    public ResponseEntity<List<Methodology>> getAll(MethodologyQM qm,
+                                                    @PageableDefault(sort = {"addTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return methodologyService.getAll(qm, pageable);
+    }
+
+    @GetMapping("/permit")
+    @Operation(summary = "域名查询方法学(访客用)", description = "author: czz")
+    public ResponseEntity<List<MethodologyPermitDTO>> getAllPermit(String domain) {
+        return methodologyService.getAllPermit(domain);
+    }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "删除指定方法学", notes = "author: czz")
+    @Operation(summary = "删除指定方法学", description = "author: czz")
     public ResponseEntity<String> delete(@PathVariable Long id) {
+        String idStr = id.toString() + ","; // get id str
+        AssertUtil.thenThrow(websiteRepository.existsByMethodologyIdsContains(idStr),"删除失败", "该方法学已被使用!");
         methodologyRepository.deleteById(id);
         return ResponseEntity.ok("OK");
     }

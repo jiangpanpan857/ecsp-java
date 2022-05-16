@@ -29,7 +29,7 @@ public class Methodology implements Serializable {
      */
     @Schema(description = "类型", required = true)
     @NotNull
-    @Column(name = "type", nullable = false, unique = true)
+    @Column(name = "type", nullable = false)
     private String type;
 
     /**

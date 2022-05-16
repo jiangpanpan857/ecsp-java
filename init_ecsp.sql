@@ -1,0 +1,1 @@
+INSERT INTO `eco_user` (`id`, `add_time`, `login`, `password`, `real_name`, `role_code`, `website_id`) VALUES (1, '2022-05-07 06:55:00.952917', 'admin', '$2a$10$HzAYhzW3UVVGkOx87aqUF.dgPa11hIJN2BB7PqRdvuTfglAsHeRRi', 'czz', 'ROLE_ADMIN', 0);
