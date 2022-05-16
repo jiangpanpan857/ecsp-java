@@ -41,7 +41,6 @@ public class EcoUserService {
     private final WebsiteService websiteService;
     private final CooperateService cooperateService;
 
-    private final EcoUserDTOMapper ecoUserDTOMapper;
 
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -56,7 +55,6 @@ public class EcoUserService {
         this.sysCompanyRepository = sysCompanyRepository;
         this.websiteService = websiteService;
         this.cooperateService = cooperateService;
-        this.ecoUserDTOMapper = ecoUserDTOMapper;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
@@ -130,7 +128,7 @@ public class EcoUserService {
 
     public ResponseEntity<EcoUserDTO> getEcoUser(Long id) {
         EcoUser ecoUser = ecoUserRepository.findById(id).orElseThrow(() -> new RuntimeException("用户不存在"));
-        EcoUserDTO dto = ecoUserDTOMapper.toDto(ecoUser);
+        EcoUserDTO dto = new EcoUserDTO(ecoUser);
         dto.setWebsiteName(websiteRepository.getById(ecoUser.getWebsiteId()).getName());
         return ResponseEntity.ok(dto);
     }

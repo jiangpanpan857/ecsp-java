@@ -64,16 +64,16 @@ public class UserJWTController {
         EcoUser ecoUser = ecoUserRepository.findByLogin(loginVM.getUsername());
         JWTToken token = new JWTToken(jwt, ecoUser.getRoleCode());
         // 网站限制 TODO
-        Website website = websiteService.getWebsiteByDomain(loginVM.getDomain());
         if (!loginVM.getUsername().equals("admin")) {
+            Website website = websiteService.getWebsiteByDomain(loginVM.getDomain());
             AssertUtil.falseThrow(ecoUserRepository.existsByLoginAndWebsiteId(loginVM.getUsername(), website.getId()), "登录失败", "用户名或密码错误");
             token.setLogin(loginVM.getUsername());
             token.setWebsiteName(website.getName());
             token.setRealName(ecoUser.getRealName());
             token.setSinkToken(website.getSinkToken());
+            token.setLogo(website.getLogo());
         }
         token.setDomain(loginVM.getDomain());
-        token.setLogo(website.getLogo());
         return new ResponseEntity<>(token, httpHeaders, HttpStatus.OK);
     }
 

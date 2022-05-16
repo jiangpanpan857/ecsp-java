@@ -1,5 +1,6 @@
 package com.ruowei.ecsp.web.rest.dto;
 
+import com.ruowei.ecsp.domain.Website;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -108,5 +109,23 @@ public class WebsiteDetailDTO {
      */
     @Schema(description = "方法学名称【,拼接】")
     private String methodologyNames;
+
+    public WebsiteDetailDTO(Website website) {
+        this.id = website.getId();
+        this.name = website.getName();
+        this.domain = website.getDomain();
+        this.carbonLibraAccount = website.getCarbonLibraAccount();
+        this.organizationName = website.getOrganizationName();
+        this.cityId = website.getCityId();
+        this.cityName = website.getCityName();
+        this.websiteContact = website.getWebsiteContact();
+        this.websiteContactNumber = website.getWebsiteContactNumber();
+        this.logo = website.getLogo();
+        this.headerImg = website.getHeaderImg();
+        this.businessNumber = website.getBusinessNumber();
+        this.address = website.getAddress();
+        this.methodologyIds = website.getMethodologyIds();
+        this.addTime = website.getAddTime();
+    }
 
 }

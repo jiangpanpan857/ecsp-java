@@ -30,7 +30,6 @@ public class WebsiteService {
     private final CooperateService cooperateService;
     private final MethodologyService methodologyService;
 
-    private final WebsiteDetailDTOMapper websiteDetailDTOMapper;
 
     private QWebsite qW = QWebsite.website;
 
@@ -38,7 +37,6 @@ public class WebsiteService {
         this.websiteRepository = websiteRepository;
         this.cooperateService = cooperateService;
         this.methodologyService = methodologyService;
-        this.websiteDetailDTOMapper = websiteDetailDTOMapper;
     }
 
     public void createWebsite(Website site) {
@@ -80,7 +78,7 @@ public class WebsiteService {
     }
 
     public WebsiteDetailDTO toWebsiteDetailDTO(Website website) {
-        WebsiteDetailDTO websiteDetailDTO = websiteDetailDTOMapper.toDto(website);
+        WebsiteDetailDTO websiteDetailDTO = new WebsiteDetailDTO(website);
         websiteDetailDTO.setMethodologyNames(methodologyService.getSiteMethodNamesStr(website));
         websiteDetailDTO.setCarbonLibraAccountName(cooperateService.getCoAccountLogin(website));
         return websiteDetailDTO;

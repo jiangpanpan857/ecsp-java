@@ -1,5 +1,6 @@
 package com.ruowei.ecsp.web.rest.dto;
 
+import com.ruowei.ecsp.domain.EcoUser;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -68,4 +69,14 @@ public class EcoUserDTO {
     @Schema(description = "网站名")
     @ApiModelProperty("网站名")
     private String websiteName;
+
+    public EcoUserDTO(EcoUser ecoUser) {
+        this.id = ecoUser.getId();
+        this.websiteId = ecoUser.getWebsiteId();
+        this.login = ecoUser.getLogin();
+        this.password = ecoUser.getPassword();
+        this.realName = ecoUser.getRealName();
+        this.roleCode = ecoUser.getRoleCode();
+        this.addTime = ecoUser.getAddTime();
+    }
 }
