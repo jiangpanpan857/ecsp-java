@@ -49,14 +49,25 @@ public class RestTemplateUtil {
         return null;
     }
 
-    public static String postForEntity(String url, Object requestBody) {
+    public static String postForEntity(String url, Object requestBody, String token) {
         try {
 
-            HttpEntity<String> requestEntity = getBrowserHeadersEntity(JsonUtil.toJsonStr(requestBody, "获取TOKEN失败"));
+            HttpEntity<String> requestEntity = getBrowserHeadersEntity(JsonUtil.toJsonStr(requestBody, "获取TOKEN失败"), token);
             ResponseEntity<String> resultStr = restTemplate.postForEntity(url, requestEntity, String.class);
             return resultStr.getBody();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> ResponseEntity<T> postForEntity(String url, Object requestBody, String token, Class<T> tClass) {
+        try {
+            HttpEntity<String> requestEntity = getBrowserHeadersEntity(JsonUtil.toJsonStr(requestBody, "获取TOKEN失败"), token);
+            return restTemplate.postForEntity(url, requestEntity, tClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+            AssertUtil.logErrorInfo(e.getMessage());
         }
         return null;
     }
@@ -78,6 +89,15 @@ public class RestTemplateUtil {
         return null;
     }
 
+    public static ResponseEntity<Object> getForObject(String url) {
+        try {
+            return restTemplate.getForEntity(url, Object.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String getForEntity(String url) {
         try {
             ResponseEntity<String> resultStr = restTemplate.getForEntity(url, String.class);
@@ -93,13 +113,20 @@ public class RestTemplateUtil {
      * @return 返回字符串类型的网页内容
      * @apiNote author: czz; 目前爬取碳交易数据，未启用
      */
-    public static String getForHtmlString(String url) {
+    public static <T> ResponseEntity<T> getExchange(String url, String token, Class<T> tClass) {
         try {
-            HttpEntity<String> requestEntity = getBrowserHeadersEntity(null);
-            ResponseEntity<String> resultStr = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
-            String body = resultStr.getBody();
-            if (body.contains("err")) return null;
-            return body;
+            HttpEntity<String> requestEntity = getBrowserHeadersEntity(null, token);
+            return restTemplate.exchange(url, HttpMethod.GET, requestEntity, tClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ResponseEntity<Object> getExchangeObject(String url, String token) {
+        try {
+            HttpEntity<String> requestEntity = getBrowserHeadersEntity(null, token);
+            return restTemplate.exchange(url, HttpMethod.GET, requestEntity, Object.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,7 +138,7 @@ public class RestTemplateUtil {
      * @return 返回带浏览器标识的HttpHeader，根据请求类型有细项调整
      * @apiNote author: czz; 主要为restTemplate增加浏览器标识，以正常访问。 其中：【POST请求，设置了ContentType】
      */
-    public static HttpHeaders getBrowserHeaders(String type) {
+    public static HttpHeaders getBrowserHeaders(String type, String token) {
         HttpHeaders headers = new HttpHeaders();
         if (type.equals("POST")) {
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -121,29 +148,28 @@ public class RestTemplateUtil {
             "user-agent",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36"
         );
-        // 为解决html内容乱码，实际效果无用，无任何影响可注释
-        if (type.equals("GET_Language")) {
-            headers.add("Accept-Language", "zh-CN,zh;q=0.9");
+        if (token != null) {
+            headers.add("authorization", "Bearer " + token);
         }
         return headers;
     }
 
     /**
-     * @param requestBody 请求体[请求类型根据是否为空判断]
+     * @param bodyJsonStr 请求体[请求类型根据是否为空判断]
      * @return 返回带浏览器标识的HttpEntity，根据请求体有细项调整
      * @apiNote author: czz;
      */
-    public static HttpEntity<String> getBrowserHeadersEntity(String requestBody) {
-        return getBrowserHeadersEntity(requestBody, requestBody == null ? "GET" : "POST");
+    public static HttpEntity<String> getBrowserHeadersEntity(String bodyJsonStr, String token) {
+        return getBrowserHeadersEntity(bodyJsonStr, bodyJsonStr == null ? "GET" : "POST", token);
     }
 
     /**
-     * @param requestBody 请求体
+     * @param bodyJsonStr 请求体
      * @param type        [GET | POST]
      * @return 返回带浏览器标识的HttpEntity，根据请求类型有细项调整
      * @apiNote author: czz;
      */
-    public static HttpEntity<String> getBrowserHeadersEntity(String requestBody, String type) {
-        return new HttpEntity<>(requestBody, getBrowserHeaders(type));
+    public static HttpEntity<String> getBrowserHeadersEntity(String bodyJsonStr, String type, String token) {
+        return new HttpEntity<>(bodyJsonStr, getBrowserHeaders(type, token));
     }
 }
