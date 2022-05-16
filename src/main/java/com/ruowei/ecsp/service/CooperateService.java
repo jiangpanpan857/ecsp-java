@@ -81,14 +81,21 @@ public class CooperateService {
     }
 
     public void addSiteToken(Website site) {
+        log.info("addSiteToken: {}", site.getId());
         String sysUserIdStr = site.getCarbonLibraAccount();
         User sysUser = userRepository.findById(Long.valueOf(sysUserIdStr)).orElseThrow(() -> new RuntimeException("用户对应碳天秤用户不存在"));
         String url = "https://localhost:5156" +
             "/api/permit/token?sysUserId=" + sysUser.getId()
             + "&sysUserName=" + sysUser.getLogin() +
             "&companyId=" + sysUser.getCompanyId();
-        String sinkToken = RestTemplateUtil.getForEntity(url);
-        site.setSinkToken(sinkToken);
+        log.info("url: {}", url);
+        try {
+            String sinkToken = RestTemplateUtil.getForEntity(url);
+            site.setSinkToken(sinkToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("addSiteToken error: {}", e.getMessage());
+        }
     }
 
     public UserModel currentUser(String login) {
