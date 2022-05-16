@@ -116,8 +116,8 @@ public class EcoNewsResource {
 
     @GetMapping("/permit/fuzzy")
     @Operation(summary = "模糊查政策资讯，项目(访客用)", description = "author: czz")
-    public ResponseEntity<List<NewsProjectDTO>> searchBy(String title) {
-        return newsProjectService.searchBy(title);
+    public ResponseEntity<List<NewsProjectDTO>> searchBy(String title, String domain) {
+        return newsProjectService.searchBy(title, domain);
     }
 
     @GetMapping("/permit/{id}")

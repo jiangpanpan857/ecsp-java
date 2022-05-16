@@ -18,6 +18,6 @@ public interface NewsRepository extends JpaRepository<News, Long>, QuerydslPredi
 
     Boolean existsByTitleAndWebsiteIdAndIdNot(String title, Long websiteId, Long id);
 
-    @Query(value = "SELECT new com.ruowei.ecsp.web.rest.dto.NewsProjectDTO(n.type, count(n.type)) FROM News n WHERE ((?1 is null) or (n.title like ?1 )) and n.status = '已发布' GROUP BY n.type")
-    List<NewsProjectDTO> searchByTitle(String title);
+    @Query(value = "SELECT new com.ruowei.ecsp.web.rest.dto.NewsProjectDTO(n.type, count(n.type)) FROM News n WHERE ((?1 is null) or (n.title like ?1 )) and n.status = '已发布' and n.websiteId = ?2 GROUP BY n.type")
+    List<NewsProjectDTO> searchByTitle(String title, Long websiteId);
 }
