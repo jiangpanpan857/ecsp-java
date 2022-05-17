@@ -84,7 +84,7 @@ public class CooperateService {
         log.info("addSiteToken: {}", site.getId());
         String sysUserIdStr = site.getCarbonLibraAccount();
         User sysUser = userRepository.findById(Long.valueOf(sysUserIdStr)).orElseThrow(() -> new RuntimeException("用户对应碳天秤用户不存在"));
-        String url = "https://localhost:5156" +
+        String url = "http://localhost:5156" +
             "/api/permit/token?sysUserId=" + sysUser.getId()
             + "&sysUserName=" + sysUser.getLogin() +
             "&companyId=" + sysUser.getCompanyId();

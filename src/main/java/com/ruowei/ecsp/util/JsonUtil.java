@@ -2,6 +2,7 @@ package com.ruowei.ecsp.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruowei.ecsp.web.rest.dto.ForestDataEncDTO;
 import org.springframework.stereotype.Component;
@@ -135,5 +136,9 @@ public class JsonUtil {
     public static <T> T copy(T source, Class<T> tClass, String title) {
         // 一千万次  15.3秒
         return toEntity(toJsonStr(source, title), tClass, title);
+    }
+
+    public static JsonNode toJsonNode(Object paramObject) {
+        return mapper.valueToTree(paramObject);
     }
 }

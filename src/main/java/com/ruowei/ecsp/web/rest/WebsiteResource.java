@@ -1,8 +1,10 @@
 package com.ruowei.ecsp.web.rest;
 
 import com.ruowei.ecsp.domain.Website;
+import com.ruowei.ecsp.repository.EcoUserRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.WebsiteService;
+import com.ruowei.ecsp.util.AssertUtil;
 import com.ruowei.ecsp.util.StreamUtil;
 import com.ruowei.ecsp.web.rest.dto.WebsiteDetailDTO;
 import com.ruowei.ecsp.web.rest.dto.WebsiteDownListDTO;
@@ -27,10 +29,12 @@ public class WebsiteResource {
 
     private final WebsiteService websiteService;
     private final WebsiteRepository websiteRepository;
+    private final EcoUserRepository ecoUserRepository;
 
-    public WebsiteResource(WebsiteService websiteService, WebsiteRepository websiteRepository) {
+    public WebsiteResource(WebsiteService websiteService, WebsiteRepository websiteRepository, EcoUserRepository ecoUserRepository) {
         this.websiteService = websiteService;
         this.websiteRepository = websiteRepository;
+        this.ecoUserRepository = ecoUserRepository;
     }
 
     @GetMapping("/down-list")
@@ -82,6 +86,7 @@ public class WebsiteResource {
         // 删除网站时，同时删除网站下的所有方法?
         // TODO 网站用户管理员 删除网站时，同时删除网站下的所有方法?
         websiteRepository.deleteById(id);
+        AssertUtil.thenThrow(ecoUserRepository.existsByWebsiteId(id), "删除失败", "网站下存在用户，不能删除");
         return ResponseEntity.ok().body("success");
     }
 }

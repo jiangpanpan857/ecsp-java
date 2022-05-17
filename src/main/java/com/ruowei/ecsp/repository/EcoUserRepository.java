@@ -21,4 +21,5 @@ public interface EcoUserRepository extends JpaRepository<EcoUser, Long> {
     EcoUser findByLogin(String login);
 
 
+    boolean existsByWebsiteId(Long id);
 }

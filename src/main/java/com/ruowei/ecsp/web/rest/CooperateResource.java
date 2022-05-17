@@ -47,4 +47,5 @@ public class CooperateResource {
         String token = coSearchService.getCurrentSiteToken();
         return ResponseEntity.ok().body(RestTemplateUtil.getExchangeObject(url, token));
     }
+
 }

@@ -35,4 +35,7 @@ public interface WebsiteRepository extends JpaRepository<Website, Long>, Queryds
     @Query(value = "select w.id from Website w where w.domain = ?1")
     Long getIdByDomain(String domain);
 
+    boolean existsByName(String name);
+
+    boolean existsByNameAndIdNot(String name, Long id);
 }

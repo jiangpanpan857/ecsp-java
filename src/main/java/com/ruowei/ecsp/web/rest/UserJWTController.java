@@ -70,7 +70,7 @@ public class UserJWTController {
             token.setLogin(loginVM.getUsername());
             token.setWebsiteName(website.getName());
             token.setRealName(ecoUser.getRealName());
-            token.setSinkToken(website.getSinkToken());
+//            token.setSinkToken(website.getSinkToken());
             token.setLogo(website.getLogo());
         }
         token.setDomain(loginVM.getDomain());

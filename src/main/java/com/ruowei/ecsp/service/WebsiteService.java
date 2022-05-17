@@ -70,8 +70,10 @@ public class WebsiteService {
     private void assertWebsiteThenSave(Website site) {
         if (site.getId() == null) {
             AssertUtil.thenThrow(websiteRepository.existsByDomain(site.getDomain()), "新增网站失败！", "该域名已被占用");
+            AssertUtil.thenThrow(websiteRepository.existsByName(site.getName()), "新增网站失败！", "该网站名已被占用");
         } else {
             AssertUtil.thenThrow(websiteRepository.existsByDomainAndIdNot(site.getDomain(), site.getId()), "修改网站失败！", "该域名已被占用");
+            AssertUtil.thenThrow(websiteRepository.existsByNameAndIdNot(site.getName(), site.getId()), "修改网站失败！", "该网站名已被占用");
         }
         cooperateService.addSiteToken(site);
         websiteRepository.save(site);
