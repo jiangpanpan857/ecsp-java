@@ -155,6 +155,10 @@ spring:
         size: 2
   thymeleaf:
     mode: HTML
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   output:
     ansi:
       console-available: true
