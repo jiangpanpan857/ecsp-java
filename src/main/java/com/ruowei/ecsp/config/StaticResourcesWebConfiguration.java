@@ -30,6 +30,7 @@ public class StaticResourcesWebConfiguration implements WebMvcConfigurer {
         ResourceHandlerRegistration resourceHandlerRegistration = appendResourceHandler(registry);
         initializeResourceHandler(resourceHandlerRegistration);
         registry.addResourceHandler("/upload/**").addResourceLocations("file:" + applicationProperties.getUploadPath());
+        registry.addResourceHandler("/sin/upload/**").addResourceLocations("file:" + "/data/projects/cnsp/upload/" );
     }
 
     protected ResourceHandlerRegistration appendResourceHandler(ResourceHandlerRegistry registry) {
