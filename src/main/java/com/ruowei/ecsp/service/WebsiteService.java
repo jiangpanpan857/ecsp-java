@@ -76,6 +76,7 @@ public class WebsiteService {
             AssertUtil.thenThrow(websiteRepository.existsByNameAndIdNot(site.getName(), site.getId()), "修改网站失败！", "该网站名已被占用");
         }
         cooperateService.addSiteToken(site);
+        AssertUtil.nullThrow(site.getSinkToken(), "网站关联业主失败", "请核查碳天秤服务是否运行正常");
         websiteRepository.save(site);
     }
 
