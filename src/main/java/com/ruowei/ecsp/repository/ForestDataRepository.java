@@ -45,14 +45,14 @@ public interface ForestDataRepository extends JpaRepository<ForestData, Long>, Q
     // 获取指定省下各市的年度数据：蓄积量
 //    @Cacheable(cacheNames = FORESTDATA_ALL_CITY_STORAGE_BY_PROVINCE_AND_YEAR)
     @Query(
-        value = "select f.cityId as id,f.cityName as name,sum(f.storage) as value from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and (f.areaId is null) group by f.cityId,f.cityName order by f.cityId asc"
+        value = "select f.cityId as id,f.cityName as name,sum(f.storage) as value from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and (f.areaId is null) and f.cityId is not null group by f.cityId,f.cityName order by f.cityId asc"
     )
     List<ForestDataAllCityDataByProvinceAndYearDTO> getAllCityStorageByProvinceAndYear(String provinceId, String startYear, String endYear);
 
     // 获取指定省下各市的年度数据：增长面积
 //    @Cacheable(cacheNames = FORESTDATA_ALL_CITY_AREA_INCREMENT_BY_PROVINCE_AND_YEAR)
     @Query(
-        value = "select f.cityId as id,f.cityName as name,sum(f.areaIncrement) as value from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and (f.areaId is null) group by f.cityId,f.cityName order by f.cityId asc"
+        value = "select f.cityId as id,f.cityName as name,sum(f.areaIncrement) as value from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and (f.areaId is null) and f.cityId is not null group by f.cityId,f.cityName order by f.cityId asc"
     )
     List<ForestDataAllCityDataByProvinceAndYearDTO> getAllCityAreaIncrementByProvinceAndYear(
         String provinceId,
@@ -91,7 +91,7 @@ public interface ForestDataRepository extends JpaRepository<ForestData, Long>, Q
     // 获取指定省下各市的年度数据：蓄积量排名
 //    @Cacheable(cacheNames = FORESTDATA_ALL_CITY_STORAGE_RANKING_BY_PROVINCE_AND_YEAR)
     @Query(
-        value = "select new com.ruowei.ecsp.web.rest.dto.ForestDataAllCityRankingByProvinceAndYearDTO(0,f.cityId,f.cityName,sum(f.storage)) from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and f.areaId is null group by f.cityId, f.cityName order by sum(f.storage) desc"
+        value = "select new com.ruowei.ecsp.web.rest.dto.ForestDataAllCityRankingByProvinceAndYearDTO(0,f.cityId,f.cityName,sum(f.storage)) from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and f.areaId is null and f.cityId is not null group by f.cityId, f.cityName order by sum(f.storage) desc"
     )
     List<ForestDataAllCityRankingByProvinceAndYearDTO> getAllCityStorageRankingByProvinceAndYear(
         String provinceId,
@@ -102,7 +102,7 @@ public interface ForestDataRepository extends JpaRepository<ForestData, Long>, Q
     // 获取指定省下各市的年度数据：增长面积排名
 //    @Cacheable(cacheNames = FORESTDATA_ALL_CITY_AREA_INCREMENT_RANKING_BY_PROVINCE_AND_YEAR)
     @Query(
-        value = "select new com.ruowei.ecsp.web.rest.dto.ForestDataAllCityRankingByProvinceAndYearDTO(0,f.cityId,f.cityName,sum(f.areaIncrement)) from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and f.areaId is null group by f.cityId, f.cityName order by sum(f.areaIncrement) desc"
+        value = "select new com.ruowei.ecsp.web.rest.dto.ForestDataAllCityRankingByProvinceAndYearDTO(0,f.cityId,f.cityName,sum(f.areaIncrement)) from ForestData f where f.provinceId = ?1 and f.year >= ?2 and f.year <= ?3 and f.areaId is null and f.cityId is not null group by f.cityId, f.cityName order by sum(f.areaIncrement) desc"
     )
     List<ForestDataAllCityRankingByProvinceAndYearDTO> getAllCityAreaIncrementRankingByProvinceAndYear(
         String provinceId,
