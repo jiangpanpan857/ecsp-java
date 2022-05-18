@@ -26,6 +26,12 @@ public class ForestDataQM {
     private String cityId;
 
     /**
+     * 区域ID
+     */
+    @Schema(description = "区域ID")
+    private String areaId;
+
+    /**
      * 年份
      */
     @Schema(description = "年份")

@@ -54,6 +54,20 @@ public class ForestData implements Serializable {
     private String cityId;
 
     /**
+     * 区县名
+     */
+    @ApiModelProperty(value = "区县名")
+    @Column(name = "area_name")
+    private String areaName;
+
+    /**
+     * 区县ID
+     */
+    @ApiModelProperty("区县ID")
+    @Column(name = "area_id")
+    private String areaId;
+
+    /**
      * 年份
      */
     @ApiModelProperty(value = "年份")
@@ -141,6 +155,32 @@ public class ForestData implements Serializable {
         this.cityId = cityId;
     }
 
+    public String getAreaName() {
+        return this.areaName;
+    }
+
+    public ForestData areaName(String areaName) {
+        this.setAreaName(areaName);
+        return this;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public String getAreaId() {
+        return this.areaId;
+    }
+
+    public ForestData areaId(String areaId) {
+        this.setAreaId(areaId);
+        return this;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
     public String getYear() {
         return this.year;
     }
@@ -208,6 +248,8 @@ public class ForestData implements Serializable {
             ", provinceId='" + getProvinceId() + "'" +
             ", cityName='" + getCityName() + "'" +
             ", cityId='" + getCityId() + "'" +
+            ", areaName='" + getAreaName() + "'" +
+            ", areaId='" + getAreaId() + "'" +
             ", year='" + getYear() + "'" +
             ", areaIncrement=" + getAreaIncrement() +
             ", storage=" + getStorage() +

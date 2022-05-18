@@ -74,7 +74,7 @@ public class MethodologyResource {
     @DeleteMapping("/{id}")
     @Operation(summary = "删除指定方法学", description = "author: czz")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        String idStr = id.toString() + ","; // get id str
+        String idStr = String.valueOf(id) + ","; // get id str
         AssertUtil.thenThrow(websiteRepository.existsByMethodologyIdsContains(idStr),"删除失败", "该方法学已被使用!");
         methodologyRepository.deleteById(id);
         return ResponseEntity.ok("OK");
