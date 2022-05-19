@@ -67,4 +67,18 @@ public class EcoUserResource {
         ecoUserRepository.deleteById(id);
         return ResponseEntity.ok().body("success delete");
     }
+
+    @PostMapping("/change-password")
+    @Operation(summary = "修改自己密码", description = "author: czz")
+    public ResponseEntity<String> changePassword(@RequestParam String password) {
+        ecoUserService.updatePassword(null, password);
+        return ResponseEntity.ok().body("success change password");
+    }
+
+    @PostMapping("/change-password/{id}")
+    @Operation(summary = "Admin修改其他人密码", description = "author: czz")
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestParam String password) {
+        ecoUserService.updatePassword(id, password);
+        return ResponseEntity.ok().body("success change password");
+    }
 }

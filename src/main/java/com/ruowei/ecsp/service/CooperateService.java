@@ -127,26 +127,5 @@ public class CooperateService {
         }
     }
 
-//    public ResponseEntity<List<SinProjectFile>> getAllSinkProjectFiles(
-//        String projectId,
-//        String fileCategoryCode
-//    ) {
-//        OptionalBooleanBuilder builder = new OptionalBooleanBuilder()
-//            .notEmptyAnd(qSinProjectFile.relId::eq, projectId)
-//            .notEmptyAnd(qSinProjectFile.used::eq, true);
-//        if (org.apache.commons.lang3.StringUtils.isNotBlank(fileCategoryCode)) {
-//            builder.notEmptyAnd(qSinProjectFile.fileCategoryCode::in, Arrays.asList(fileCategoryCode.split(",")));
-//        }
-//        List<SinProjectFile> sinProjectFileList = jpaQueryFactory.selectFrom(qSinProjectFile).where(builder.build()).fetch();
-//        return ResponseEntity.ok().body(sinProjectFileList);
-//    }
-//
-//    public ResponseEntity<List<SinProjectFile>> getClearPeply(String ids) {
-//        List<SinProjectFile> sinProjectFileList = sinProjectFileRepository.findByIdIn(
-//            Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toList())
-//        );
-//        return ResponseEntity.ok().body(sinProjectFileList);
-//    }
-
 }
 

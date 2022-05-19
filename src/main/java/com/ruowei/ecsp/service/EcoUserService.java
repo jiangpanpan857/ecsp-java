@@ -4,7 +4,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ruowei.ecsp.domain.*;
+import com.ruowei.ecsp.domain.EcoUser;
+import com.ruowei.ecsp.domain.QEcoUser;
+import com.ruowei.ecsp.domain.QWebsite;
+import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.EcoUserRepository;
 import com.ruowei.ecsp.repository.SysCompanyRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
@@ -40,7 +43,6 @@ public class EcoUserService {
 
     private final WebsiteService websiteService;
     private final CooperateService cooperateService;
-
 
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -115,6 +117,23 @@ public class EcoUserService {
         // remain password not edited.
         ecoUser.setPassword(oldEcoUser.getPassword());
         ecoUserRepository.save(ecoUser);
+    }
+
+    public void updatePassword(Long userId, String password) {
+        UserModel userModel = getUserModel();
+        EcoUser ecoUser;
+        String type;
+        if (userId == null) {
+            type = "self";
+            ecoUser = StreamUtil.optionalValue(ecoUserRepository.findById(userModel.getUserId()), "修改密码失败", "用户不存在");
+        } else {
+            type = "other";
+            AssertUtil.falseThrow(userModel.getRoleCode().equals("ROLE_ADMIN"), "修改密码失败", "没有权限");
+            ecoUser = StreamUtil.optionalValue(ecoUserRepository.findById(userId), "修改密码失败", "用户不存在");
+        }
+        ecoUser.setPassword(passwordEncoder.encode(password));
+        ecoUserRepository.save(ecoUser);
+        log.info("{} update {} password", userModel.getLogin(), type);
     }
 
     private void assertEcoUser(EcoUser ecoUser) {
