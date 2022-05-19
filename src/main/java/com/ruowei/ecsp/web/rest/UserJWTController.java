@@ -8,6 +8,7 @@ import com.ruowei.ecsp.security.jwt.JWTFilter;
 import com.ruowei.ecsp.security.jwt.TokenProvider;
 import com.ruowei.ecsp.service.WebsiteService;
 import com.ruowei.ecsp.util.AssertUtil;
+import com.ruowei.ecsp.web.rest.errors.DefaultProblem;
 import com.ruowei.ecsp.web.rest.vm.LoginVM;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.zalando.problem.Status;
 
 import javax.validation.Valid;
 
@@ -55,10 +57,14 @@ public class UserJWTController {
             loginVM.getUsername(),
             loginVM.getPassword()
         );
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
+        String jwt;
+        try {
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            jwt = tokenProvider.createToken(authentication, loginVM.isRememberMe());
+        } catch (Exception e) {
+            throw new DefaultProblem("认证失败", Status.NOT_ACCEPTABLE, "用户名或密码错误");
+        }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         EcoUser ecoUser = ecoUserRepository.findByLogin(loginVM.getUsername());
