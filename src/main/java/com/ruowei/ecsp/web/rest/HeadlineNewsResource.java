@@ -58,10 +58,10 @@ public class HeadlineNewsResource {
     public ResponseEntity<String> createNews(@RequestBody HeadlineNews headlineNews) {
         // assert
         AssertUtil.notNullThrow(headlineNews.getId(), "新增失败!", "新增时，id需为空!");
-        UserModel userModel = ecoUserService.getUserModel();
+        UserModel userModel = ecoUserService.currentUserModel();
         AssertUtil.thenThrow(headlineNewsRepository.existsByTitleAndWebsiteId(headlineNews.getTitle(), userModel.getWebsiteId()), "新增失败!", "新增时，title不能重复!");
         // get set: sequence, websiteId, createTime, status
-        Integer sequence = sequenceService.newSequence("headline_news");
+        Integer sequence = sequenceService.getNewSequenceByType("headline_news");
         headlineNews.setStatus("未发布");
         headlineNews.setAddTime(ZonedDateTime.now());
         headlineNews.setWebsiteId(userModel.getWebsiteId());
@@ -124,7 +124,7 @@ public class HeadlineNewsResource {
     public ResponseEntity<String> sortNews(@RequestBody List<Long> ids) {
         AssertUtil.nullThrow(ids, "排序失败!", "排序时，ids不能为空!");
         List<HeadlineNews> news = headlineNewsRepository.findAllByIdIn(ids);
-        sequenceService.reSequence(ids, news);
+        sequenceService.reorderSequence(ids, news);
         headlineNewsRepository.saveAll(news);
         return ResponseEntity.ok().body("排序成功!");
     }
@@ -141,7 +141,7 @@ public class HeadlineNewsResource {
             .notEmptyAnd(qHeadlineNews.title::contains, newsVM.getTitle())
             .notEmptyAnd(qHeadlineNews.status::eq, newsVM.getStatus())
             .build();
-        Long websiteId = ecoUserService.getWebsiteId(newsVM.getDomain());
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(newsVM.getDomain());
         return builder.and(qHeadlineNews.websiteId.eq(websiteId));
     }
 

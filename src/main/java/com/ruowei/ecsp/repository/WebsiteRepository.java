@@ -27,7 +27,7 @@ public interface WebsiteRepository extends JpaRepository<Website, Long>, Queryds
     List<WebsiteDownListDTO> getWebsiteDownList();
 
     @Query(value = "select new com.ruowei.ecsp.web.rest.dto.WebsiteVisDTO(w.id, w.name, w.domain, w.organizationName, w.cityId, w.cityName," +
-        " w.websiteContact, w.websiteContactNumber, w.logo, w.headerImg, w.businessNumber, w.address, w.methodologyIds) from Website w WHERE  w.domain = ?1")
+        " w.websiteContact, w.websiteContactNumber, w.email, w.logo, w.headerImg, w.businessNumber, w.address, w.methodologyIds) from Website w WHERE  w.domain = ?1")
     WebsiteVisDTO getWebsiteVis(String domain);
 
     Optional<Website> findByDomain(String domain);

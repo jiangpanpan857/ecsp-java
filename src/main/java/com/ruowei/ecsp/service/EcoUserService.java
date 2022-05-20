@@ -60,11 +60,11 @@ public class EcoUserService {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public Long getWebsiteId(String domain) {
+    public Long getWebsiteIdByDomain(String domain) {
         Long websiteId;
         if (domain == null) {
             try {
-                UserModel userModel = getUserModel();
+                UserModel userModel = currentUserModel();
                 websiteId = userModel.getWebsiteId();
             } catch (Exception e) {
                 throw new RuntimeException("未登录");
@@ -77,9 +77,9 @@ public class EcoUserService {
 
     }
 
-    public UserModel getUserModel() {
+    public UserModel currentUserModel() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return cooperateService.currentUser(user.getUsername());
+        return cooperateService.userModelByLogin(user.getUsername());
     }
 
     public void createEcoUser(EcoUser ecoUser) {
@@ -119,19 +119,21 @@ public class EcoUserService {
         ecoUserRepository.save(ecoUser);
     }
 
-    public void updatePassword(Long userId, String password) {
-        UserModel userModel = getUserModel();
+    public void updatePassword(Long userId, String oldPassword, String newPassword) {
+        UserModel userModel = currentUserModel();
         EcoUser ecoUser;
         String type;
         if (userId == null) {
             type = "self";
             ecoUser = StreamUtil.optionalValue(ecoUserRepository.findById(userModel.getUserId()), "修改密码失败", "用户不存在");
+            boolean result = passwordEncoder.matches(oldPassword, ecoUser.getPassword());
+            AssertUtil.falseThrow(result, "修改失败", "原密码错误");
         } else {
             type = "other";
             AssertUtil.falseThrow(userModel.getRoleCode().equals("ROLE_ADMIN"), "修改密码失败", "没有权限");
             ecoUser = StreamUtil.optionalValue(ecoUserRepository.findById(userId), "修改密码失败", "用户不存在");
         }
-        ecoUser.setPassword(passwordEncoder.encode(password));
+        ecoUser.setPassword(passwordEncoder.encode(newPassword));
         ecoUserRepository.save(ecoUser);
         log.info("{} update {} password", userModel.getLogin(), type);
     }

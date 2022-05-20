@@ -52,8 +52,8 @@ public class EcoReResource {
     @PostMapping("")
     @Operation(summary = "新增生态资源", description = "author: czz")
     public ResponseEntity<String> createNews(@RequestBody EcoResource ecoResource) {
-        Integer sequence = sequenceService.newSequence("eco_resource");
-        Long websiteId = ecoUserService.getWebsiteId(null);
+        Integer sequence = sequenceService.getNewSequenceByType("eco_resource");
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(null);
         AssertUtil.notNullThrow(ecoResource.getId(), "新增失败!", "新增时，id需为空!");
         AssertUtil.thenThrow(ecoResourceRepository.existsByTitleAndWebsiteId(ecoResource.getTitle(), websiteId), "新增失败!", "新增时，title不能重复!");
         ecoResource.setStatus("未发布");
@@ -119,7 +119,7 @@ public class EcoReResource {
         AssertUtil.nullThrow(ids, "排序失败!", "排序时，ids不能为空!");
         List<EcoResource> ecoResources = ecoResourceRepository.findAllByIdIn(ids);
         EcoResource[] array = ecoResources.toArray(new EcoResource[0]);
-        sequenceService.reSequence(ids, array);
+        sequenceService.reorderSequence(ids, array);
         ecoResourceRepository.saveAll(ecoResources);
         return ResponseEntity.ok().body("排序成功!");
     }
@@ -136,7 +136,7 @@ public class EcoReResource {
             .notEmptyAnd(qER.title::contains, newsVM.getTitle())
             .notEmptyAnd(qER.status::eq, newsVM.getStatus())
             .build();
-        Long websiteId = ecoUserService.getWebsiteId(newsVM.getDomain());
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(newsVM.getDomain());
         return builder.and(qER.websiteId.eq(websiteId));
     }
 

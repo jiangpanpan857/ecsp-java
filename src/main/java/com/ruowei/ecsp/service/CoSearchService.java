@@ -31,7 +31,7 @@ public class CoSearchService {
 
     public String getCurrentSiteToken() {
         try {
-            UserModel userModel = ecoUserService.getUserModel();
+            UserModel userModel = ecoUserService.currentUserModel();
             Website website = websiteRepository.getById(userModel.getWebsiteId());
             return website.getSinkToken();
         } catch (Exception e) {

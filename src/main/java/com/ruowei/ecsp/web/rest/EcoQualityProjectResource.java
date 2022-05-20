@@ -47,7 +47,7 @@ public class EcoQualityProjectResource {
     @PostMapping("")
     @Operation(summary = "新增优质项目", description = "author: czz")
     public ResponseEntity<String> createQualityProject(@RequestBody EcoQualityProject ecoQualityProject) {
-        UserModel userModel = ecoUserService.getUserModel();
+        UserModel userModel = ecoUserService.currentUserModel();
         AssertUtil.notNullThrow(ecoQualityProject.getId(), "新增失败！", "新增时，id须为空！");
         AssertUtil.thenThrow(qualityProjectRepository.existsByNameAndWebsiteId(ecoQualityProject.getName(), userModel.getWebsiteId()), "新增失败!", "新增时，项目名称不能重复!");
         Instant now = Instant.now();
@@ -70,7 +70,7 @@ public class EcoQualityProjectResource {
     @PutMapping("/{id}")
     @Operation(summary = "修改优质项目", description = "author: czz")
     public ResponseEntity<String> updateQualityProject(@PathVariable final Long id, @RequestBody EcoQualityProject ecoQualityProject) {
-        UserModel userModel = ecoUserService.getUserModel();
+        UserModel userModel = ecoUserService.currentUserModel();
         AssertUtil.nullThrow(id, "修改失败!", "修改时，id不能为空!");
         EcoQualityProject qP_ = StreamUtil.optionalValue(qualityProjectRepository.findById(id), "修改失败!", "不存在的优质项目!");
         AssertUtil.thenThrow(
@@ -115,7 +115,7 @@ public class EcoQualityProjectResource {
     @GetMapping("/permit/types")
     @Operation(summary = "获取此网站有的优质项目类型列表（访客）", description = "author: czz")
     public ResponseEntity<List<String>> getAllPermittedQualityProjectTypes(String domain) {
-        Long websiteId = ecoUserService.getWebsiteId(domain);
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(domain);
         List<String> types = qualityProjectRepository.getTypes(websiteId);
         return ResponseEntity.ok().body(types);
     }
@@ -142,7 +142,7 @@ public class EcoQualityProjectResource {
             .notEmptyAnd(qEQP.status::eq, qm.getStatus())
             .notEmptyAnd(qEQP.provinceName::in, qm.getProvinceNameList())
             .build();
-        Long websiteId = ecoUserService.getWebsiteId(qm.getDomain()); // 无论是否登录均可获取网站ID
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(qm.getDomain()); // 无论是否登录均可获取网站ID
         return predicate.and(qEQP.websiteId.eq(websiteId));
     }
 

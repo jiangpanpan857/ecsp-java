@@ -1,12 +1,13 @@
 package com.ruowei.ecsp.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 /**
  * 网站
@@ -87,6 +88,14 @@ public class Website implements Serializable {
     @NotNull
     @Column(name = "website_contact_number", nullable = false)
     private String websiteContactNumber;
+
+    /**
+     * 网站联系人邮箱
+     */
+    @Schema(description = "网站联系人邮箱", required = true)
+    @NotNull
+    @Column(name = "email", nullable = false)
+    private String email;
 
     /**
      * 网站logo
@@ -263,6 +272,19 @@ public class Website implements Serializable {
         this.websiteContactNumber = websiteContactNumber;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
+    public Website email(String email) {
+        this.setEmail(email);
+        return this;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getLogo() {
         return this.logo;
     }
@@ -349,6 +371,7 @@ public class Website implements Serializable {
         this.sinkToken = sinkToken;
         return this;
     }
+
     public void setSinkToken(String sinkToken) {
         this.sinkToken = sinkToken;
     }
@@ -385,6 +408,7 @@ public class Website implements Serializable {
             ", cityName='" + getCityName() + "'" +
             ", websiteContact='" + getWebsiteContact() + "'" +
             ", websiteContactNumber='" + getWebsiteContactNumber() + "'" +
+            ", email='" + getEmail() + "'" +
             ", logo='" + getLogo() + "'" +
             ", headerImg='" + getHeaderImg() + "'" +
             ", businessNumber='" + getBusinessNumber() + "'" +

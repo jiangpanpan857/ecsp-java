@@ -28,8 +28,8 @@ public class NewsProjectService {
         this.ecoUserService = ecoUserService;
     }
 
-    public ResponseEntity<List<NewsProjectDTO>> searchBy(String name, String domain) {
-        Long websiteId = ecoUserService.getWebsiteId(domain);
+    public ResponseEntity<List<NewsProjectDTO>> searchNewsProjectByNameAndDomain(String name, String domain) {
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(domain);
         name = StringUtil.isNotBlank(name) ? "%" + name + "%" : null;
         List<NewsProjectDTO> dtos = newsRepository.searchByTitle(name, websiteId);
         Stream.of("林草新闻", "地方动态", "政策法规").forEach(type -> {

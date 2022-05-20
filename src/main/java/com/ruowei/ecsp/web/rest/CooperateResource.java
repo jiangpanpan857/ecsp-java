@@ -30,7 +30,7 @@ public class CooperateResource {
     @GetMapping("/users")
     @Operation(summary = "条件查询网站关联碳天秤账号候选项(系统管理员)", description = "author: czz")
     public ResponseEntity<List<SinUserDTO>> getAllCooperateUsers(SinUserQM qm) {
-        List<SinUserDTO> dtos = cooperateService.getAllCooperateUsers(qm);
+        List<SinUserDTO> dtos = cooperateService.searchSinUsers(qm);
         return ResponseEntity.ok().body(dtos);
     }
 

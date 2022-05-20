@@ -62,13 +62,13 @@ public class MethodologyResource {
     @Operation(summary = "条件查询方法学(系统管理员用)", description = "author: czz")
     public ResponseEntity<List<Methodology>> getAll(MethodologyQM qm,
                                                     @PageableDefault(sort = {"addTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        return methodologyService.getAll(qm, pageable);
+        return methodologyService.searchAllMethodology(qm, pageable);
     }
 
     @GetMapping("/permit")
     @Operation(summary = "域名查询方法学(访客用)", description = "author: czz")
     public ResponseEntity<List<MethodologyPermitDTO>> getAllPermit(String domain) {
-        return methodologyService.getAllPermit(domain);
+        return methodologyService.allMethodologyPermitByDomain(domain);
     }
 
     @DeleteMapping("/{id}")

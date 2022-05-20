@@ -25,7 +25,7 @@ public class SequenceService {
         this.headlineNewsRepository = headlineNewsRepository;
     }
 
-    public Integer newSequence(String type) {
+    public Integer getNewSequenceByType(String type) {
         Integer sequence;
         switch (type) {
             default:
@@ -41,7 +41,7 @@ public class SequenceService {
         return sequence == null || sequence == 0 ? 1 : sequence + 1;
     }
 
-    public void reSequence(List<Long> ids, List<? extends SequenceIMP> imps) {
+    public void reorderSequence(List<Long> ids, List<? extends SequenceIMP> imps) {
         List<Integer> sequences = StreamUtil.sortedCollectV(imps, Comparator.comparing(SequenceIMP::getSequence), SequenceIMP::getSequence);
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
@@ -50,7 +50,7 @@ public class SequenceService {
         }
     }
 
-    public void reSequence(List<Long> ids, SequenceIMP... impArr) {
+    public void reorderSequence(List<Long> ids, SequenceIMP... impArr) {
         List<Integer> sequences = StreamUtil.sortedCollectV(impArr, Comparator.comparing(SequenceIMP::getSequence), SequenceIMP::getSequence);
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);

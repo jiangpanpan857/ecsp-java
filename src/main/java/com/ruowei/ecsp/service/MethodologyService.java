@@ -55,7 +55,7 @@ public class MethodologyService {
         assertMethodologyThenSave(methodology);
     }
 
-    public ResponseEntity<List<Methodology>> getAll(MethodologyQM qm, Pageable pageable) {
+    public ResponseEntity<List<Methodology>> searchAllMethodology(MethodologyQM qm, Pageable pageable) {
         BooleanBuilder builder = new OptionalBooleanBuilder()
             .notEmptyAnd(qM.name::contains, qm.getName())
             .notEmptyAnd(qM.type::eq, qm.getType())
@@ -64,7 +64,7 @@ public class MethodologyService {
         return PageUtil.pageReturn(page);
     }
 
-    public ResponseEntity<List<MethodologyPermitDTO>> getAllPermit(String domain) {
+    public ResponseEntity<List<MethodologyPermitDTO>> allMethodologyPermitByDomain(String domain) {
         List<Long> methodologyIds = getSiteMethodologyIds(domain);
         List<MethodologyPermitDTO> list = new ArrayList<>(queryFactory
             .selectFrom(qM)
@@ -85,7 +85,7 @@ public class MethodologyService {
         return ResponseEntity.ok(list);
     }
 
-    public String getSiteMethodNamesStr(Website website) {
+    public String methodNamesJoinedStrBySite(Website website) {
         List<Long> methodologyIds = getSiteMethodologyIds(website);
         List<Methodology> methodologies = methodologyRepository.findByIdIn(methodologyIds);
         List<String> names = StreamUtil.collectV(methodologies, Methodology::getName);

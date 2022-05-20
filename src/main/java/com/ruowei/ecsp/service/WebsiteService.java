@@ -75,15 +75,15 @@ public class WebsiteService {
             AssertUtil.thenThrow(websiteRepository.existsByDomainAndIdNot(site.getDomain(), site.getId()), "修改网站失败！", "该域名已被占用");
             AssertUtil.thenThrow(websiteRepository.existsByNameAndIdNot(site.getName(), site.getId()), "修改网站失败！", "该网站名已被占用");
         }
-        cooperateService.addSiteToken(site);
+        cooperateService.addSiteSinToken(site);
         AssertUtil.nullThrow(site.getSinkToken(), "网站关联业主失败", "请核查碳天秤服务是否运行正常");
         websiteRepository.save(site);
     }
 
     public WebsiteDetailDTO toWebsiteDetailDTO(Website website) {
         WebsiteDetailDTO websiteDetailDTO = new WebsiteDetailDTO(website);
-        websiteDetailDTO.setMethodologyNames(methodologyService.getSiteMethodNamesStr(website));
-        websiteDetailDTO.setCarbonLibraAccountName(cooperateService.getCoAccountLogin(website));
+        websiteDetailDTO.setMethodologyNames(methodologyService.methodNamesJoinedStrBySite(website));
+        websiteDetailDTO.setCarbonLibraAccountName(cooperateService.getSiteCoAccountLogin(website));
         return websiteDetailDTO;
     }
 

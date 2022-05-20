@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -50,16 +51,16 @@ public class CooperateService {
         this.queryFactory = queryFactory;
     }
 
-    public String getCoAccountLogin(Website site) {
+    public String getSiteCoAccountLogin(Website site) {
         return userRepository.getById(Long.valueOf(site.getCarbonLibraAccount())).getLogin();
     }
 
-    public SinUserDTO getSiteSysUser(Website site) {
+    public SinUserDTO getSiteSinUserDTO(Website site) {
         User sysUser = userRepository.getById(Long.valueOf(site.getCarbonLibraAccount()));
         return new SinUserDTO(sysUser.getId(), sysUser.getLogin());
     }
 
-    public List<SinUserDTO> getAllCooperateUsers(SinUserQM qm) {
+    public List<SinUserDTO> searchSinUsers(SinUserQM qm) {
         // remove already connected users
         BooleanBuilder builder = new BooleanBuilder()
             .and(qU.status.eq(UserStatusType.NORMAL))
@@ -80,8 +81,8 @@ public class CooperateService {
         return query.fetch();
     }
 
-    public void addSiteToken(Website site) {
-        log.info("addSiteToken: {}", site.getId());
+    public void addSiteSinToken(Website site) {
+        log.info("addSiteSinToken: {}", site.getId());
         String sysUserIdStr = site.getCarbonLibraAccount();
         User sysUser = userRepository.findById(Long.valueOf(sysUserIdStr)).orElseThrow(() -> new RuntimeException("用户对应碳天秤用户不存在"));
         String url = "http://localhost:5156" +
@@ -94,11 +95,11 @@ public class CooperateService {
             site.setSinkToken(sinkToken);
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("addSiteToken error: {}", e.getMessage());
+            log.error("addSiteSinToken error: {}", e.getMessage());
         }
     }
 
-    public UserModel currentUser(String login) {
+    public UserModel userModelByLogin(@NotNull String login) {
         EcoUser ecoUser = ecoUserRepository.findOneByLogin(login).orElseThrow(() -> new RuntimeException("用户不存在"));
         UserModel userModel = new UserModel(ecoUser);
         if (!login.equals("admin")) {

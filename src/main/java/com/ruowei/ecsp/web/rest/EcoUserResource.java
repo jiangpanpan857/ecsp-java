@@ -6,6 +6,7 @@ import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.EcoUserService;
 import com.ruowei.ecsp.web.rest.dto.EcoUserDTO;
 import com.ruowei.ecsp.web.rest.qm.EcoUserQM;
+import com.ruowei.ecsp.web.rest.vm.ChangePasswordVM;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -70,15 +72,15 @@ public class EcoUserResource {
 
     @PostMapping("/change-password")
     @Operation(summary = "修改自己密码", description = "author: czz")
-    public ResponseEntity<String> changePassword(@RequestParam String password) {
-        ecoUserService.updatePassword(null, password);
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordVM vm) {
+        ecoUserService.updatePassword(null, vm.getOldPwd(), vm.getNewPwd());
         return ResponseEntity.ok().body("success change password");
     }
 
     @PostMapping("/change-password/{id}")
     @Operation(summary = "Admin修改其他人密码", description = "author: czz")
     public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestParam String password) {
-        ecoUserService.updatePassword(id, password);
+        ecoUserService.updatePassword(id, null, password);
         return ResponseEntity.ok().body("success change password");
     }
 }

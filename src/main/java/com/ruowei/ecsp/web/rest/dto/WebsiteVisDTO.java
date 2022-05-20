@@ -55,6 +55,12 @@ public class WebsiteVisDTO {
     private String websiteContactNumber;
 
     /**
+     * 网站联系人邮箱
+     */
+    @Schema(description = "网站联系人邮箱")
+    private String email;
+
+    /**
      * 网站logo
      */
     @Schema(description = "网站logo")

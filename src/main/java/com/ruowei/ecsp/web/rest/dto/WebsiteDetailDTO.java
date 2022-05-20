@@ -69,6 +69,12 @@ public class WebsiteDetailDTO {
     private String websiteContactNumber;
 
     /**
+     * 网站联系人邮箱
+     */
+    @Schema(description = "网站联系人邮箱")
+    private String email;
+
+    /**
      * 网站logo
      */
     @Schema(description = "网站logo", required = true)
@@ -120,6 +126,7 @@ public class WebsiteDetailDTO {
         this.cityName = website.getCityName();
         this.websiteContact = website.getWebsiteContact();
         this.websiteContactNumber = website.getWebsiteContactNumber();
+        this.email = website.getEmail();
         this.logo = website.getLogo();
         this.headerImg = website.getHeaderImg();
         this.businessNumber = website.getBusinessNumber();

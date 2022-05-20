@@ -8,6 +8,7 @@ entity Website(eco_website) {
     cityName                String required           /** 城市名称 */
     websiteContact          String required           /** 网站联系人 */
     websiteContactNumber    String required           /** 网站联系人电话 */
+    email                   String required           /** 网站联系人邮箱 */
     logo                    String required           /** 网站logo */
     headerImg               String required           /** 顶部背景图 */
     businessNumber          String required           /** 业务咨询电话 */

@@ -54,6 +54,12 @@
       "javadoc": "网站联系人电话"
     },
     {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"],
+      "javadoc": "网站联系人邮箱"
+    },
+    {
       "fieldName": "logo",
       "fieldType": "String",
       "fieldValidateRules": ["required"],

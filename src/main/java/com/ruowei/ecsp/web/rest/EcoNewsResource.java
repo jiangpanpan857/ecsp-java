@@ -58,7 +58,7 @@ public class EcoNewsResource {
     @PostMapping("")
     @Operation(summary = "新增政策资讯", description = "author: czz")
     public ResponseEntity<String> createNews(@RequestBody News news) {
-        UserModel userModel = ecoUserService.getUserModel();
+        UserModel userModel = ecoUserService.currentUserModel();
         AssertUtil.notNullThrow(news.getId(), "新增失败!", "新增时，id需为空!");
         AssertUtil.thenThrow(newsRepository.existsByTitleAndWebsiteId(news.getTitle(), userModel.getWebsiteId()), "新增失败!", "新增时，title不能重复!");
         Instant now = Instant.now();
@@ -117,7 +117,7 @@ public class EcoNewsResource {
     @GetMapping("/permit/fuzzy")
     @Operation(summary = "模糊查政策资讯，项目(访客用)", description = "author: czz")
     public ResponseEntity<List<NewsProjectDTO>> searchBy(String title, String domain) {
-        return newsProjectService.searchBy(title, domain);
+        return newsProjectService.searchNewsProjectByNameAndDomain(title, domain);
     }
 
     @GetMapping("/permit/{id}")
@@ -141,7 +141,7 @@ public class EcoNewsResource {
             .notEmptyAnd(qN.status::eq, newsVM.getStatus())
             .notEmptyAnd(qN.type::eq, newsVM.getType())
             .build();
-        Long websiteId = ecoUserService.getWebsiteId(newsVM.getDomain());
+        Long websiteId = ecoUserService.getWebsiteIdByDomain(newsVM.getDomain());
         return builder.and(qN.websiteId.eq(websiteId));
     }
 
