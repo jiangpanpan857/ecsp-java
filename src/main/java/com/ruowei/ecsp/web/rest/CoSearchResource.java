@@ -1,7 +1,13 @@
 package com.ruowei.ecsp.web.rest;
 
+import com.ruowei.ecsp.domain.Website;
+import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.CoSearchService;
+import com.ruowei.ecsp.util.StreamUtil;
+import com.ruowei.ecsp.web.rest.dto.SinUserDTO;
+import com.ruowei.ecsp.web.rest.qm.CarbonTradeTableQM;
 import com.ruowei.ecsp.web.rest.qm.SinProjectQM;
+import com.ruowei.ecsp.web.rest.qm.SinUserQM;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,11 +28,66 @@ import java.util.Map;
 public class CoSearchResource {
 
     private final CoSearchService coSearchService;
+    private final WebsiteRepository websiteRepository;
 
-    public CoSearchResource(CoSearchService coSearchService) {
+    public CoSearchResource(CoSearchService coSearchService, WebsiteRepository websiteRepository) {
         this.coSearchService = coSearchService;
+        this.websiteRepository = websiteRepository;
     }
 
+    // TODO 森林数据管理
+
+    @GetMapping("/permit/forest-datas/allAreaRankingByCityAndYear")
+    @Operation(summary = "森林数据统计信息-指定年份和城市下各区域排名")
+    public ResponseEntity<Object> getAllAreaRankingByCityAndYear(
+        @ApiParam("数据类型：0森林蓄积量｜1新增造林面积") @RequestParam String type,
+        @ApiParam("城市") @RequestParam String cityId,
+        @ApiParam("起始年份") @RequestParam Integer startYear,
+        @ApiParam("截止年份") @RequestParam Integer endYear
+    ) {
+        String url = "permit/forest-datas/allAreaRankingByCityAndYear";
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("cityId", cityId);
+        map.put("startYear", startYear);
+        map.put("endYear", endYear);
+        return coSearchService.redirectUrl(url, map, null);
+    }
+
+    @GetMapping("/permit/forest-datas/allYearDataByArea")
+    @Operation(summary = "森林数据统计信息-指定区域的各年份数据")
+    public ResponseEntity<Object> getAllYearDataByArea(
+        @ApiParam("数据类型：0森林蓄积量｜1新增造林面积") @RequestParam String type,
+        @ApiParam("区域") @RequestParam String areaId
+    ) {
+        String url = "permit/forest-datas/allYearDataByArea";
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("areaId", areaId);
+        return coSearchService.redirectUrl(url, map, null);
+    }
+
+    // TODO 碳价数据管理
+    @GetMapping("/permit/carbon-trades/statistic/ccer")
+    @Operation(summary = "碳交易数据统计数据", description = "author: czz")
+    public ResponseEntity<Object> getCcerStatistics(CarbonTradeTableQM qm) {
+        // TODO 改为转发
+        String url = "permit/carbon-trades/statistic/ccer";
+        return coSearchService.redirectUrl(url, qm, null);
+    }
+
+    @GetMapping("/eco-cooperate/users")
+    @Operation(summary = "条件查询网站关联碳天秤账号候选项(系统管理员)", description = "author: czz")
+    public ResponseEntity<Object> getAllCooperateUsers(SinUserQM qm) {
+        List<SinUserDTO> sinUserDTOS = (List<SinUserDTO>) coSearchService.redirectUrl("eco-cooperate/users", qm, null);
+        // TODO 根据网站类型过滤
+        List<String> accountIdStrs = StreamUtil.collectV(sinUserDTOS, sinUserDTO -> String.valueOf(sinUserDTO.getId()));
+        List<Website> websites = websiteRepository.findAllByCarbonLibraAccountIn(accountIdStrs);
+        for (Website website : websites) {
+            sinUserDTOS.remove(sinUserDTOS.stream().filter(sinUserDTO -> String.valueOf(sinUserDTO.getId()).equals(website.getCarbonLibraAccount())).findFirst().get());
+        }
+        return ResponseEntity.ok(sinUserDTOS);
+    }
 
     @GetMapping("/dicts/byCatagory")
     @Operation(summary = "按分类获取数据字典列表")

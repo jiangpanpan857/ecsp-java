@@ -1,15 +1,18 @@
 package com.ruowei.ecsp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ruowei.ecsp.domain.EcoUser;
 import com.ruowei.ecsp.domain.Website;
+import com.ruowei.ecsp.repository.EcoUserRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
-import com.ruowei.ecsp.security.UserModel;
 import com.ruowei.ecsp.util.AssertUtil;
 import com.ruowei.ecsp.util.JsonUtil;
 import com.ruowei.ecsp.util.RestTemplateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -18,22 +21,24 @@ import java.util.Map;
 @Service
 @Slf4j
 public class CoSearchService {
-    private final CooperateService cooperateService;
-    private final EcoUserService ecoUserService;
 
     private final WebsiteRepository websiteRepository;
+    private final EcoUserRepository ecoUserRepository;
 
-    public CoSearchService(CooperateService cooperateService, EcoUserService ecoUserService, WebsiteRepository websiteRepository) {
-        this.cooperateService = cooperateService;
-        this.ecoUserService = ecoUserService;
+    public CoSearchService(WebsiteRepository websiteRepository, EcoUserRepository ecoUserRepository) {
         this.websiteRepository = websiteRepository;
+        this.ecoUserRepository = ecoUserRepository;
     }
 
     public String getCurrentSiteToken() {
         try {
-            UserModel userModel = ecoUserService.currentUserModel();
-            Website website = websiteRepository.getById(userModel.getWebsiteId());
-            return website.getSinkToken();
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String login = user.getUsername();
+            EcoUser ecoUser = ecoUserRepository.findOneByLogin(login).orElseThrow(() -> new RuntimeException("用户不存在"));
+            if (!login.equals("admin")) {
+                Website site = websiteRepository.getById(ecoUser.getWebsiteId());
+                return site.getSinkToken();
+            }
         } catch (Exception e) {
             log.error("getCurrentSiteToken error", e);
             AssertUtil.toThrow("操作失败", "无法获取所属网站的token");

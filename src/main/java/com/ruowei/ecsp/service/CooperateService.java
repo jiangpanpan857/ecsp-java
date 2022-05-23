@@ -52,34 +52,13 @@ public class CooperateService {
     }
 
     public String getSiteCoAccountLogin(Website site) {
-        return userRepository.getById(Long.valueOf(site.getCarbonLibraAccount())).getLogin();
+        SinUserQM qm = new SinUserQM();
+        qm.setId(Long.valueOf(site.getCarbonLibraAccount()));
+        String url = "eco-cooperate/users";
+        List<SinUserDTO> dtos = (List<SinUserDTO>) coSearchService.redirectUrl(url, qm, null);
+        return dtos.get(0).getLogin();
     }
 
-    public SinUserDTO getSiteSinUserDTO(Website site) {
-        User sysUser = userRepository.getById(Long.valueOf(site.getCarbonLibraAccount()));
-        return new SinUserDTO(sysUser.getId(), sysUser.getLogin());
-    }
-
-    public List<SinUserDTO> searchSinUsers(SinUserQM qm) {
-        // remove already connected users
-        BooleanBuilder builder = new BooleanBuilder()
-            .and(qU.status.eq(UserStatusType.NORMAL))
-            .and(qU.companyId.isNotNull())
-            .and(qW.id.isNull())  // 如果是网站用户已绑定的，则不能是合作用户侯选
-            .and(qSC.status.eq(CompanyStatusType.NORMAL));
-        BooleanBuilder predicate = new OptionalBooleanBuilder()
-            .notEmptyAnd(qSC.companyAddress::contains, qm.getCityName())
-            .notEmptyAnd(qSC.companyName::contains, qm.getOrganizationName())
-            .notEmptyAnd(qU.login::contains, qm.getLogin())
-            .build();
-        JPAQuery<SinUserDTO> query = queryFactory
-            .select(Projections.bean(SinUserDTO.class, qU.id, qU.login))
-            .from(qU)
-            .leftJoin(qSC).on(qU.companyId.eq(qSC.id))
-            .leftJoin(qW).on(qU.login.eq(qW.carbonLibraAccount))
-            .where(builder.and(predicate));
-        return query.fetch();
-    }
 
     public void addSiteSinToken(Website site) {
         log.info("addSiteSinToken: {}", site.getId());

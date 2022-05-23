@@ -29,7 +29,6 @@ public class UserModel {
     // 网站名
     private String websiteName;
 
-    private Long companyId;
 
     private Long sysUserId;
 
@@ -42,10 +41,9 @@ public class UserModel {
         this.roleCode = ecoUser.getRoleCode();
     }
 
-    public void setNeeded(Website website, Long companyId, Long sysUserId) {
+    public void setNeeded(Website website, Long sysUserId) {
         this.websiteId = website.getId();
         this.websiteName = website.getName();
-        this.companyId = companyId;
         this.sysUserId = sysUserId;
     }
 

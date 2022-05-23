@@ -47,15 +47,15 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-            createCache(cm, com.ruowei.ecsp.domain.Website.class.getName());
+//            createCache(cm, com.ruowei.ecsp.domain.Website.class.getName());
             createCache(cm, com.ruowei.ecsp.domain.Website.class.getName() + ".ecoUsers");
             createCache(cm, com.ruowei.ecsp.domain.Website.class.getName() + ".headlineNews");
             createCache(cm, com.ruowei.ecsp.domain.Website.class.getName() + ".news");
             createCache(cm, com.ruowei.ecsp.domain.Website.class.getName() + ".ecoResources");
             createCache(cm, com.ruowei.ecsp.domain.Website.class.getName() + ".ecoQualityProjects");
             createCache(cm, com.ruowei.ecsp.domain.EcoUser.class.getName());
-            createCache(cm, com.ruowei.ecsp.domain.Methodology.class.getName());
-            createCache(cm, com.ruowei.ecsp.domain.Methodology.class.getName() + ".websites");
+//            createCache(cm, com.ruowei.ecsp.domain.Methodology.class.getName());
+//            createCache(cm, com.ruowei.ecsp.domain.Methodology.class.getName() + ".websites");
             createCache(cm, com.ruowei.ecsp.domain.HeadlineNews.class.getName());
             createCache(cm, com.ruowei.ecsp.domain.News.class.getName());
             createCache(cm, com.ruowei.ecsp.domain.EcoResource.class.getName());

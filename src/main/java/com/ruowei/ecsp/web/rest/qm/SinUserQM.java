@@ -28,4 +28,11 @@ public class SinUserQM {
     @Schema(description = "用户名称")
     private String login;
 
+    /**
+     * 用户ID
+     */
+    @Schema(description = "用户ID ")
+    private Long id;
+
+
 }

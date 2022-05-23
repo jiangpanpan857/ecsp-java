@@ -38,4 +38,6 @@ public interface WebsiteRepository extends JpaRepository<Website, Long>, Queryds
     boolean existsByName(String name);
 
     boolean existsByNameAndIdNot(String name, Long id);
+
+    List<Website> findAllByCarbonLibraAccountIn(List<String> carbonLibraAccounts);
 }
