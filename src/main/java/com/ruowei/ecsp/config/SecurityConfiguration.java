@@ -100,6 +100,7 @@ public class SecurityConfiguration {
 //            .antMatchers("/api/eco-resource/permit/**").permitAll()
 //            .antMatchers("/api/headline-news/permit/**").permitAll()
 //            .antMatchers("/api/methodology/permit/**").permitAll()
+            .antMatchers("/ecsp/**").permitAll()
             .antMatchers("/sin/**").authenticated()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)

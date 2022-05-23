@@ -122,3 +122,4 @@ jhipster:
 application:
   #  reportPath: /data/projects/ecsp/report/
   uploadPath: /data/projects/ecsp/upload/
+  ecspUploadPath: /data/projects/ecsp/upload/

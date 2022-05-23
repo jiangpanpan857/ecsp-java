@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
     private String uploadPath;
+    private String ecspUploadPath;
 
     public String getUploadPath() {
         return uploadPath;
@@ -20,4 +21,11 @@ public class ApplicationProperties {
         this.uploadPath = uploadPath;
     }
 
+    public String getEcspUploadPath() {
+        return ecspUploadPath;
+    }
+
+    public void setEcspUploadPath(String ecspUploadPath) {
+        this.ecspUploadPath = ecspUploadPath;
+    }
 }
