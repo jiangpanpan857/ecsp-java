@@ -1,15 +1,8 @@
 package com.ruowei.ecsp.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ruowei.ecsp.domain.*;
-import com.ruowei.ecsp.domain.enumeration.CompanyStatusType;
-import com.ruowei.ecsp.domain.enumeration.UserStatusType;
+import com.ruowei.ecsp.domain.EcoUser;
+import com.ruowei.ecsp.domain.Website;
 import com.ruowei.ecsp.repository.EcoUserRepository;
-import com.ruowei.ecsp.repository.SysCompanyRepository;
-import com.ruowei.ecsp.repository.UserRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.security.UserModel;
 import com.ruowei.ecsp.util.RestTemplateUtil;
@@ -32,23 +25,16 @@ import java.util.List;
 @Slf4j
 @Transactional
 public class CooperateService {
-    private final UserRepository userRepository;
-    private final SysCompanyRepository sysCompanyRepository;
     private final EcoUserRepository ecoUserRepository;
     private final WebsiteRepository websiteRepository;
 
-    private final JPAQueryFactory queryFactory;
-    private QUser qU = QUser.user;
-    private QSysCompany qSC = QSysCompany.sysCompany;
-    private QWebsite qW = QWebsite.website;
+    private final CoSearchService coSearchService;
 
 
-    public CooperateService(UserRepository userRepository, SysCompanyRepository sysCompanyRepository, EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, JPAQueryFactory queryFactory) {
-        this.userRepository = userRepository;
-        this.sysCompanyRepository = sysCompanyRepository;
+    public CooperateService(EcoUserRepository ecoUserRepository, WebsiteRepository websiteRepository, CoSearchService coSearchService) {
         this.ecoUserRepository = ecoUserRepository;
         this.websiteRepository = websiteRepository;
-        this.queryFactory = queryFactory;
+        this.coSearchService = coSearchService;
     }
 
     public String getSiteCoAccountLogin(Website site) {
@@ -63,11 +49,8 @@ public class CooperateService {
     public void addSiteSinToken(Website site) {
         log.info("addSiteSinToken: {}", site.getId());
         String sysUserIdStr = site.getCarbonLibraAccount();
-        User sysUser = userRepository.findById(Long.valueOf(sysUserIdStr)).orElseThrow(() -> new RuntimeException("用户对应碳天秤用户不存在"));
         String url = "http://localhost:5156" +
-            "/api/permit/token?sysUserId=" + sysUser.getId()
-            + "&sysUserName=" + sysUser.getLogin() +
-            "&companyId=" + sysUser.getCompanyId();
+            "/api/permit/token?sysUserId=" + Long.valueOf(sysUserIdStr);
         log.info("url: {}", url);
         try {
             String sinkToken = RestTemplateUtil.getForEntity(url);
@@ -84,8 +67,7 @@ public class CooperateService {
         if (!login.equals("admin")) {
             Website site = websiteRepository.getById(ecoUser.getWebsiteId());
             String sysUserIdStr = site.getCarbonLibraAccount();
-            User sysUser = userRepository.findById(Long.valueOf(sysUserIdStr)).orElseThrow(() -> new RuntimeException("用户对应碳天秤用户不存在"));
-            userModel.setNeeded(site, sysUser.getCompanyId(), sysUser.getId());
+            userModel.setNeeded(site, Long.valueOf(sysUserIdStr));
         }
         return userModel;
     }
