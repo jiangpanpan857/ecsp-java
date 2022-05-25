@@ -68,8 +68,7 @@ public class WebsiteResource {
     @GetMapping("")
     @Operation(summary = "获取网站(系统管理员)", description = "author: czz")
     public ResponseEntity<List<WebsiteDetailDTO>> getAll(WebsiteListQM qm,
-                                                @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
-        // TODO details login
+                                                         @PageableDefault(sort = "addTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return websiteService.getAllWebsiteDetailDTOS(qm, pageable);
     }
 
@@ -83,8 +82,6 @@ public class WebsiteResource {
     @DeleteMapping("/{id}")
     @Operation(summary = "删除网站", description = "author: czz")
     public ResponseEntity<String> deleteWebsite(@PathVariable Long id) {
-        // 删除网站时，同时删除网站下的所有方法?
-        // TODO 网站用户管理员 删除网站时，同时删除网站下的所有方法?
         websiteRepository.deleteById(id);
         AssertUtil.thenThrow(ecoUserRepository.existsByWebsiteId(id), "删除失败", "网站下存在用户，不能删除");
         return ResponseEntity.ok().body("success");

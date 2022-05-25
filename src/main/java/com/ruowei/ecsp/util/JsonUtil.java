@@ -138,6 +138,10 @@ public class JsonUtil {
         return toEntity(toJsonStr(source, title), tClass, title);
     }
 
+    public static <T> T transfer(Object source, Class<T> tClass, String title) {
+        return toEntity(toJsonStr(source, title), tClass, title);
+    }
+
     public static JsonNode toJsonNode(Object paramObject) {
         return mapper.valueToTree(paramObject);
     }

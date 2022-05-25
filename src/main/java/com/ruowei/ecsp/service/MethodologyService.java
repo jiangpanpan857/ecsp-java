@@ -103,7 +103,6 @@ public class MethodologyService {
 
     private List<Long> getSiteMethodologyIds(String domain) {
         Website website = StreamUtil.optionalValue(websiteRepository.findByDomain(domain), "获取失败！", "该域名不存在");
-
         return StringUtil.getLongList(website.getMethodologyIds());
     }
 

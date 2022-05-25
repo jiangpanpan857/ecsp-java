@@ -35,7 +35,56 @@ public class CoSearchResource {
         this.websiteRepository = websiteRepository;
     }
 
-    // TODO 森林数据管理
+    @GetMapping("/permit/forest-datas/allCityDataByProvinceAndYear")
+    @Operation(summary = "森林数据统计信息-指定省份和年份的各城市数据")
+    public ResponseEntity<Object> getAllCityDataByProvinceAndYear(
+        @ApiParam("数据类型：0森林蓄积量｜1新增造林面积") @RequestParam String type,
+        @ApiParam("省份") @RequestParam String provinceId,
+        @ApiParam("起始年份") @RequestParam Integer startYear,
+        @ApiParam("截止年份") @RequestParam Integer endYear
+    ) {
+        String url = "forest-datas/allCityDataByProvinceAndYear";
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("provinceId", provinceId);
+        map.put("startYear", startYear);
+        map.put("endYear", endYear);
+        return coSearchService.redirectGetWithoutSinToken(url, map, null);
+    }
+
+    @GetMapping("/permit/forest-datas/allCityRankingByProvinceAndYear")
+    @Operation(summary = "森林数据统计信息-指定年份和省份的各城市排名")
+    public ResponseEntity<Object> getAllCityRankingByProvinceAndYear(
+        @ApiParam("数据类型：0森林蓄积量｜1新增造林面积") @RequestParam String type,
+        @ApiParam("省份") @RequestParam String provinceId,
+        @ApiParam("起始年份") @RequestParam Integer startYear,
+        @ApiParam("截止年份") @RequestParam Integer endYear
+    ) throws Exception {
+        String url = "forest-datas/allCityRankingByProvinceAndYear";
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("provinceId", provinceId);
+        map.put("startYear", startYear);
+        map.put("endYear", endYear);
+        return coSearchService.redirectGetWithoutSinToken(url, map, null);
+    }
+
+    @GetMapping("/permit/forest-datas/allAreaDataByCityAndYear")
+    @Operation(summary = "森林数据统计信息-指定城市和年份的各区域数据")
+    public ResponseEntity<Object> getAllAreaDataByCityAndYear(
+        @ApiParam("数据类型：0森林蓄积量｜1新增造林面积") @RequestParam String type,
+        @ApiParam("市") @RequestParam String cityId,
+        @ApiParam("起始年份") @RequestParam Integer startYear,
+        @ApiParam("截止年份") @RequestParam Integer endYear
+    ) {
+        String url = "permit/forest-datas/allAreaDataByCityAndYear";
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", type);
+        map.put("cityId", cityId);
+        map.put("startYear", startYear);
+        map.put("endYear", endYear);
+        return coSearchService.redirectGetWithoutSinToken(url, map, null);
+    }
 
     @GetMapping("/permit/forest-datas/allAreaRankingByCityAndYear")
     @Operation(summary = "森林数据统计信息-指定年份和城市下各区域排名")
@@ -51,7 +100,7 @@ public class CoSearchResource {
         map.put("cityId", cityId);
         map.put("startYear", startYear);
         map.put("endYear", endYear);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithoutSinToken(url, map, null);
     }
 
     @GetMapping("/permit/forest-datas/allYearDataByArea")
@@ -64,29 +113,26 @@ public class CoSearchResource {
         Map<String, Object> map = new HashMap<>();
         map.put("type", type);
         map.put("areaId", areaId);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithoutSinToken(url, map, null);
     }
 
-    // TODO 碳价数据管理
     @GetMapping("/permit/carbon-trades/statistic/ccer")
     @Operation(summary = "碳交易数据统计数据", description = "author: czz")
     public ResponseEntity<Object> getCcerStatistics(CarbonTradeTableQM qm) {
-        // TODO 改为转发
         String url = "permit/carbon-trades/statistic/ccer";
-        return coSearchService.redirectUrl(url, qm, null);
+        return coSearchService.redirectGetWithoutSinToken(url, qm, null);
     }
 
     @GetMapping("/eco-cooperate/users")
     @Operation(summary = "条件查询网站关联碳天秤账号候选项(系统管理员)", description = "author: czz")
     public ResponseEntity<Object> getAllCooperateUsers(SinUserQM qm) {
-        List<SinUserDTO> sinUserDTOS = (List<SinUserDTO>) coSearchService.redirectUrl("eco-cooperate/users", qm, null);
-        // TODO 根据网站类型过滤
+        List<SinUserDTO> sinUserDTOS = coSearchService.getCarbonLibraAccount(qm);
         List<String> accountIdStrs = StreamUtil.collectV(sinUserDTOS, sinUserDTO -> String.valueOf(sinUserDTO.getId()));
         List<Website> websites = websiteRepository.findAllByCarbonLibraAccountIn(accountIdStrs);
         for (Website website : websites) {
             sinUserDTOS.remove(sinUserDTOS.stream().filter(sinUserDTO -> String.valueOf(sinUserDTO.getId()).equals(website.getCarbonLibraAccount())).findFirst().get());
         }
-        return ResponseEntity.ok(sinUserDTOS);
+        return ResponseEntity.ok().body(sinUserDTOS);
     }
 
     @GetMapping("/dicts/byCatagory")
@@ -94,14 +140,14 @@ public class CoSearchResource {
     public ResponseEntity<Object> getAllDictsByCatagory(@ApiParam(value = "分类编码", required = true) @RequestParam String catagory) {
         Map<String, Object> map = new HashMap<>();
         map.put("catagory", catagory);
-        return coSearchService.redirectUrl("dicts/byCatagory", map, null);
+        return coSearchService.redirectGetWithDefaultSinToken("dicts/byCatagory", map, null);
     }
 
     @GetMapping("/district/only-province")
     @Operation(summary = "获取省下拉列表接口", description = "作者：czz")
     public ResponseEntity<Object> getProvinceDistricts() {
         String url = "district/only-province";
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-projects")
@@ -111,21 +157,21 @@ public class CoSearchResource {
         Pageable pageable
     ) {
         String url = "sink-projects";
-        return coSearchService.redirectUrl(url, qm, pageable);
+        return coSearchService.redirectGetWithDefaultSinToken(url, qm, pageable);
     }
 
     @GetMapping("/sink-project/{id}")
     @Operation(summary = "获取碳汇项目信息接口", description = "作者: czz")
     public ResponseEntity<Object> getSinkProjectDetail(@PathVariable Long id) {
         String url = "sink-project/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/evaluation-application/{id}")
     @Operation(summary = "获取碳汇项目申请内容接口", description = "author: czz</br>")
     public ResponseEntity<Object> evaluationApplication(@PathVariable Long id) {
         String url = "evaluation-application/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-project-files")
@@ -138,14 +184,14 @@ public class CoSearchResource {
         map.put("projectId", projectId);
         map.put("fileCategoryCode", fileCategoryCode);
         String url = "sink-project-files";
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 
     @GetMapping("/sink-project-red-check/detail/{id}")
     @Operation(summary = "获取碳汇项目减排量核查信息(详情调用)", description = "作者：czz")
     public ResponseEntity<Object> getSinkProjectRedCheckDetailInfo(@PathVariable Long id) {
         String url = "sink-project-red-check/detail/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-project-judgement/{id}")
@@ -157,14 +203,14 @@ public class CoSearchResource {
         String url = "sink-project-judgement/" + id;
         Map<String, Object> map = new HashMap<>();
         map.put("isApplication", isApplication);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 
     @GetMapping("/sink-project/grass-detail/{id}")
     @Operation(summary = "草地设计信息获取", description = "author: czz</br>")
     public ResponseEntity<Object> estimationSinkGrass(@PathVariable Long id) {
         String url = "sink-project/grass-detail/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-project/grass-monitor/detail")
@@ -174,7 +220,7 @@ public class CoSearchResource {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
         map.put("serialNum", serialNum);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 
     @GetMapping("/sink-project/sun-monitor-detail/")
@@ -184,28 +230,28 @@ public class CoSearchResource {
         Map<String, Object> map = new HashMap<>();
         map.put("projectId", projectId);
         map.put("serialNum", serialNum);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 
     @GetMapping("/sink-project/sun-detail/{id}")
     @Operation(summary = "光伏设计信息获取", description = "author: czz</br>")
     public ResponseEntity<Object> getSunDesignVM(@PathVariable Long id) {
         String url = "sink-project/sun-detail/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-project-monitor/detail/{id}")
     @Operation(summary = "获取碳汇项目监测信息(详情调用)", description = "作者：czz")
     public ResponseEntity<Object> getSinkProjectMonitorDetailInfo(@PathVariable Long id) {
         String url = "sink-project-monitor/detail/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-project/design-detail/{id}")
     @Operation(summary = "碳汇设计信息获取", description = "author: czz</br>")
     public ResponseEntity<Object> estimationSinkProject(@PathVariable Long id) {
         String url = "sink-project/design-detail/" + id;
-        return coSearchService.redirectUrl(url, null, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, null, null);
     }
 
     @GetMapping("/sink-knowledge-base/drop-down")
@@ -218,7 +264,7 @@ public class CoSearchResource {
         Map<String, Object> map = new HashMap<>();
         map.put("categoryCode", categoryCode);
         map.put("baseCode", baseCode);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 
     @GetMapping("/sink-project-files/clear-reply")
@@ -229,6 +275,6 @@ public class CoSearchResource {
         String url = "sink-project-files/clear-reply";
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
-        return coSearchService.redirectUrl(url, map, null);
+        return coSearchService.redirectGetWithDefaultSinToken(url, map, null);
     }
 }

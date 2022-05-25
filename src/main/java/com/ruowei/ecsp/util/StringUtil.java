@@ -138,6 +138,9 @@ public class StringUtil {
     }
 
     public static List<Long> getLongList(String str) {
+        if (StringUtils.isBlank(str)) {
+            return new ArrayList<>();
+        }
         List<Long> list = Arrays.stream(str.split(",")).map(Long::valueOf).collect(Collectors.toList());
         return list;
     }
