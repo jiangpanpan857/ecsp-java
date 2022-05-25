@@ -53,7 +53,7 @@ public class CoSearchService {
 
     public String getRedirectUrl(String url, Object paramObject, Pageable pageable) {
         String newUrl;
-        String preUrl = "http://localhost:8080/api/";
+        String preUrl = "http://localhost:5156/api/";
         StringBuilder urlBuilder = new StringBuilder(preUrl).append(url).append("?");
         if (pageable != null) {
             urlBuilder.append("page=").append(pageable.getPageNumber()).append("&size=").append(pageable.getPageSize()).append("&");
