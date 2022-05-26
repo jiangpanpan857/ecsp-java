@@ -47,12 +47,12 @@ public class EcoQualityProjectResource {
     @PostMapping("")
     @Operation(summary = "新增优质项目", description = "author: czz")
     public ResponseEntity<String> createQualityProject(@RequestBody EcoQualityProject ecoQualityProject) {
-        UserModel userModel = ecoUserService.currentUserModel();
+        Long websiteId = ecoUserService.websiteIdOfCurrentUser();
         AssertUtil.notNullThrow(ecoQualityProject.getId(), "新增失败！", "新增时，id须为空！");
-        AssertUtil.thenThrow(qualityProjectRepository.existsByNameAndWebsiteId(ecoQualityProject.getName(), userModel.getWebsiteId()), "新增失败!", "新增时，项目名称不能重复!");
+        AssertUtil.thenThrow(qualityProjectRepository.existsByNameAndWebsiteId(ecoQualityProject.getName(), websiteId), "新增失败!", "新增时，项目名称不能重复!");
         Instant now = Instant.now();
         LocalDate nowDate = LocalDate.now();
-        ecoQualityProject.createDate(nowDate).createTime(now).status("未发布").websiteId(userModel.getWebsiteId());
+        ecoQualityProject.createDate(nowDate).createTime(now).status("未发布").websiteId(websiteId);
         qualityProjectRepository.save(ecoQualityProject);
         return ResponseEntity.ok().body("新增成功");
     }

@@ -92,14 +92,7 @@ public class SecurityConfiguration {
             .antMatchers("/api/authenticate").permitAll()
             .antMatchers("/upload/**").permitAll()   // 本项目文件设置无权限即可访问
             .antMatchers("/api/file/upload").permitAll()
-            .antMatchers("/api/**/permit/**").permitAll()
-//            .antMatchers("/api/cor/permit/**").permitAll()
-//            .antMatchers("/api/eco-user/permit/**").permitAll()
-//            .antMatchers("/api/eco-news/permit/**").permitAll()
-//            .antMatchers("/api/eco-quality-project/permit/**").permitAll()
-//            .antMatchers("/api/eco-resource/permit/**").permitAll()
-//            .antMatchers("/api/headline-news/permit/**").permitAll()
-//            .antMatchers("/api/methodology/permit/**").permitAll()
+            .antMatchers("/api/**/permit/**").permitAll() // 模板化：接口路由含permit即可无权限访问
             .antMatchers("/ecsp/**").permitAll()
             .antMatchers("/sin/**").authenticated()
             .antMatchers("/api/**").authenticated()

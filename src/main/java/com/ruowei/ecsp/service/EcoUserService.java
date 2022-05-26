@@ -71,6 +71,10 @@ public class EcoUserService {
 
     }
 
+    public Long websiteIdOfCurrentUser() {
+        return currentUserModel().getWebsiteId();
+    }
+
     public UserModel currentUserModel() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String login = user.getUsername();

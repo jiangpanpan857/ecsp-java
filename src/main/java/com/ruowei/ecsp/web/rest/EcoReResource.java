@@ -53,7 +53,7 @@ public class EcoReResource {
     @Operation(summary = "新增生态资源", description = "author: czz")
     public ResponseEntity<String> createNews(@RequestBody EcoResource ecoResource) {
         Integer sequence = sequenceService.getNewSequenceByType("eco_resource");
-        Long websiteId = ecoUserService.getWebsiteIdByDomain(null);
+        Long websiteId = ecoUserService.websiteIdOfCurrentUser();
         AssertUtil.notNullThrow(ecoResource.getId(), "新增失败!", "新增时，id需为空!");
         AssertUtil.thenThrow(ecoResourceRepository.existsByTitleAndWebsiteId(ecoResource.getTitle(), websiteId), "新增失败!", "新增时，title不能重复!");
         ecoResource.setStatus("未发布");
@@ -87,6 +87,7 @@ public class EcoReResource {
         ecoResource.setAddTime(oldResource.getAddTime());
         ecoResource.setStatus(oldResource.getStatus());
         ecoResource.setWebsiteId(oldResource.getWebsiteId());
+        ecoResource.setSequence(oldResource.getSequence());
         ecoResourceRepository.save(ecoResource);
         return ResponseEntity.ok().body("修改成功!");
     }

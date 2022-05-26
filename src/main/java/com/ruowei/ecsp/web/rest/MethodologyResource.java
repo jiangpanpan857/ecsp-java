@@ -5,6 +5,7 @@ import com.ruowei.ecsp.repository.MethodologyRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
 import com.ruowei.ecsp.service.MethodologyService;
 import com.ruowei.ecsp.util.AssertUtil;
+import com.ruowei.ecsp.util.StringUtil;
 import com.ruowei.ecsp.web.rest.dto.MethodologyPermitDTO;
 import com.ruowei.ecsp.web.rest.qm.MethodologyQM;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,7 +53,7 @@ public class MethodologyResource {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "获取指定id方法学详情", description= "author: czz")
+    @Operation(summary = "获取指定id方法学详情", description = "author: czz")
     public ResponseEntity<Methodology> get(@PathVariable Long id) {
         Optional<Methodology> optional = methodologyRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(optional);
@@ -74,8 +75,8 @@ public class MethodologyResource {
     @DeleteMapping("/{id}")
     @Operation(summary = "删除指定方法学", description = "author: czz")
     public ResponseEntity<String> delete(@PathVariable Long id) {
-        String idStr = String.valueOf(id) + ","; // get id str
-        AssertUtil.thenThrow(websiteRepository.existsByMethodologyIdsContains(idStr),"删除失败", "该方法学已被使用!");
+        String idStr = StringUtil.castAppendComma(id);   // get id str
+        AssertUtil.thenThrow(websiteRepository.existsByMethodologyIdsContains(idStr), "删除失败", "该方法学已被使用!");
         methodologyRepository.deleteById(id);
         return ResponseEntity.ok("OK");
     }

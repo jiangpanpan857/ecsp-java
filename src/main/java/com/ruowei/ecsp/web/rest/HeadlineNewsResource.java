@@ -93,6 +93,7 @@ public class HeadlineNewsResource {
         headlineNews.setAddTime(oldNews.getAddTime());
         headlineNews.setStatus(oldNews.getStatus());
         headlineNews.setWebsiteId(oldNews.getWebsiteId());
+        headlineNews.setSequence(oldNews.getSequence());
         headlineNewsRepository.save(headlineNews);
         return ResponseEntity.ok().body("修改成功!");
     }

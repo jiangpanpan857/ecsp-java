@@ -249,4 +249,26 @@ public class StringUtil {
     public static boolean isNotBlank(String name) {
         return !StringUtils.isBlank(name);
     }
+
+    /* ----------------------------------------------------------------------------------- *
+     * ---           Cast           ---       ---      ---       ------------------------- *
+     * ---                                                       ------------------------- *
+     * ---                                                       ------------------------- *
+     * ---                                                       ------------------------- *
+     * ---                                                       ------------------------- *
+     */
+    public static Long castToLong(String str) {
+        return Long.valueOf(str);
+    }
+
+    public static String castToString(Long num) {
+        return String.valueOf(num);
+    }
+
+    public static String castAppendComma(Long num) {
+        return castToString(num) + ",";
+    }
+    public static String castAppend(Long num, String append) {
+        return castToString(num) + append;
+    }
 }

@@ -7,7 +7,6 @@ import com.ruowei.ecsp.domain.News;
 import com.ruowei.ecsp.domain.QNews;
 import com.ruowei.ecsp.repository.NewsRepository;
 import com.ruowei.ecsp.repository.WebsiteRepository;
-import com.ruowei.ecsp.security.UserModel;
 import com.ruowei.ecsp.service.EcoUserService;
 import com.ruowei.ecsp.service.NewsProjectService;
 import com.ruowei.ecsp.service.OptionalBooleanBuilder;
@@ -58,15 +57,15 @@ public class EcoNewsResource {
     @PostMapping("")
     @Operation(summary = "新增政策资讯", description = "author: czz")
     public ResponseEntity<String> createNews(@RequestBody News news) {
-        UserModel userModel = ecoUserService.currentUserModel();
+        Long websiteId = ecoUserService.websiteIdOfCurrentUser();
         AssertUtil.notNullThrow(news.getId(), "新增失败!", "新增时，id需为空!");
-        AssertUtil.thenThrow(newsRepository.existsByTitleAndWebsiteId(news.getTitle(), userModel.getWebsiteId()), "新增失败!", "新增时，title不能重复!");
+        AssertUtil.thenThrow(newsRepository.existsByTitleAndWebsiteId(news.getTitle(), websiteId), "新增失败!", "新增时，title不能重复!");
         Instant now = Instant.now();
         LocalDate nowDate = LocalDate.now();
         news.setStatus("未发布");
         news.setCreateDate(nowDate);
         news.setCreateTime(now);
-        news.setWebsiteId(userModel.getWebsiteId());
+        news.setWebsiteId(websiteId);
         newsRepository.save(news);
         return ResponseEntity.ok().body("新增成功!");
     }

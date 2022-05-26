@@ -45,8 +45,8 @@ public class SequenceService {
         List<Integer> sequences = StreamUtil.sortedCollectV(imps, Comparator.comparing(SequenceIMP::getSequence), SequenceIMP::getSequence);
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            SequenceIMP imp = imps.stream().filter(s -> s.getId().equals(id)).findFirst().get();
-            imp.setSequence(sequences.get(i));
+            Integer sequence = sequences.get(i);
+            imps.stream().filter(s -> s.getId().equals(id)).findFirst().ifPresent(s -> s.setSequence(sequence));
         }
     }
 
@@ -54,8 +54,8 @@ public class SequenceService {
         List<Integer> sequences = StreamUtil.sortedCollectV(impArr, Comparator.comparing(SequenceIMP::getSequence), SequenceIMP::getSequence);
         for (int i = 0; i < ids.size(); i++) {
             Long id = ids.get(i);
-            SequenceIMP imp = Stream.of(impArr).filter(s -> s.getId().equals(id)).findFirst().get();
-            imp.setSequence(sequences.get(i));
+            Integer sequence = sequences.get(i);
+            Stream.of(impArr).filter(s -> s.getId().equals(id)).findFirst().ifPresent(s -> s.setSequence(sequence));
         }
     }
 
