@@ -92,6 +92,16 @@ public class MethodologyService {
         return StringUtil.join(names);
     }
 
+    public boolean isMethodologyUsed(String idStr) {
+        List<Website> websites = websiteRepository.findAll();
+        for (Website website : websites) {
+            if (StringUtil.contains(website.getMethodologyIds(), idStr)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void assertMethodologyThenSave(Methodology methodology) {
         if (methodology.getId() == null) {
             AssertUtil.thenThrow(methodologyRepository.existsByName(methodology.getName()), "新增方法学失败！", "该方法论已存在");
@@ -109,5 +119,6 @@ public class MethodologyService {
     private List<Long> getSiteMethodologyIds(Website website) {
         return StringUtil.getLongList(website.getMethodologyIds());
     }
+
 
 }

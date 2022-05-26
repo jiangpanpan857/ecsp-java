@@ -21,7 +21,7 @@ public interface WebsiteRepository extends JpaRepository<Website, Long>, Queryds
 
     boolean existsByDomainAndIdNot(String domain, Long id);
 
-    boolean existsByMethodologyIdsContains(@NotNull String idStr);
+    Boolean existsByMethodologyIdsContains(String methodologyId);
 
     @Query(value = "select new com.ruowei.ecsp.web.rest.dto.WebsiteDownListDTO(w.id, w.name) from Website w WHERE  1 = 1 order by  w.addTime desc ")
     List<WebsiteDownListDTO> getWebsiteDownList();

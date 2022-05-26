@@ -271,4 +271,18 @@ public class StringUtil {
     public static String castAppend(Long num, String append) {
         return castToString(num) + append;
     }
+
+    public static boolean contains(String a, String b) {
+        if (StringUtils.isEmpty(a) || StringUtils.isEmpty(b)) {
+            return false;
+        } else {
+            String[] aStrList =  a.split(",");
+            for (String str : aStrList) {
+                if (str.equals(b)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
