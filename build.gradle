@@ -30,8 +30,8 @@ version = "0.0.1-SNAPSHOT"
 
 description = ""
 
-sourceCompatibility=11
-targetCompatibility=11
+sourceCompatibility = 11
+targetCompatibility = 11
 assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17" || "18"
 
 apply from: "gradle/docker.gradle"
@@ -196,6 +196,11 @@ configurations {
     }
 }
 
+bootJar {
+    baseName = "ecsp"
+    version = ''
+}
+
 repositories {
     // Local maven repository is required for libraries built locally with maven like development jhipster-bom.
     // mavenLocal()
@@ -242,7 +247,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     testImplementation "org.testcontainers:mysql"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation ("org.springframework.boot:spring-boot-starter-web") {
+    implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
     implementation "org.springframework.boot:spring-boot-starter-undertow"
@@ -259,9 +264,9 @@ dependencies {
         implementation "io.jsonwebtoken:jjwt-impl"
         implementation "io.jsonwebtoken:jjwt-jackson"
     }
-    implementation ("org.springdoc:springdoc-openapi-ui:1.6.8")
-    implementation ("io.springfox:springfox-swagger2:2.2.2")
-    implementation ("io.springfox:springfox-swagger-ui:2.2.2")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.8")
+    implementation("io.springfox:springfox-swagger2:2.2.2")
+    implementation("io.springfox:springfox-swagger-ui:2.2.2")
     implementation "mysql:mysql-connector-java"
     liquibaseRuntime "mysql:mysql-connector-java"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
