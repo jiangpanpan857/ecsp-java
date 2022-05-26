@@ -143,7 +143,7 @@ public class CoSearchResource {
         return coSearchService.redirectGetWithDefaultSinToken("dicts/byCatagory", map, null);
     }
 
-    @GetMapping("/district/only-province")
+    @GetMapping("/district/permit/only-province")
     @Operation(summary = "获取省下拉列表接口", description = "作者：czz")
     public ResponseEntity<Object> getProvinceDistricts() {
         String url = "district/only-province";
