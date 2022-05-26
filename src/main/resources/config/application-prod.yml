@@ -34,9 +34,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     #    160-test
-    url: jdbc:mysql://192.168.1.160:3307/cnspjava_test?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
-    username: cnsptest
-    password: Cnsptest@2021
+    url: jdbc:mysql://192.168.1.160:3307/ecsp_test?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
+    username: ecsp_test
+    password: Ecsp_test@2022
     #    online-prod: 47.94.228.158:3306
     #    url: jdbc:mysql://localhost:3306/cnsp_prod?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     #    username: cnsp_prod
